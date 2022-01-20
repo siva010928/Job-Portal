@@ -19,8 +19,9 @@ public class Job {
 
     //only for posting a job
     private ArrayList<String> questionsStrings;
-    
-    public Job(String jobTitle, String jobDescription, String locationType, String location, String fullOrPartTime,Integer openings, String candidateProfile, String educationLevel, ArrayList<String> jobTypes, ArrayList<String> jobSchedules, ArrayList<String> questionsStrings) {
+    ArrayList<Integer> jobTypesIds,jobSchedulesIds;
+
+    public Job(String jobTitle, String jobDescription, String locationType, String location, String fullOrPartTime,Integer openings, String candidateProfile, String educationLevel, ArrayList<Integer> jobTypes, ArrayList<Integer> jobSchedules, ArrayList<String> questionsStrings) {
         this.openings=openings;
         this.jobTitle = jobTitle;
         this.jobDescription = jobDescription;
@@ -29,8 +30,8 @@ public class Job {
         this.fullOrPartTime = fullOrPartTime;
         this.candidateProfile = candidateProfile;
         this.educationLevel = educationLevel;
-        this.jobTypes = jobTypes;
-        this.jobSchedules = jobSchedules;
+        this.jobTypesIds = jobTypes;
+        this.jobSchedulesIds = jobSchedules;
         this.questionsStrings = questionsStrings;
     }
 
@@ -57,7 +58,6 @@ public class Job {
         this.jobSchedules = jobSchedules;
         this.questions = questions;
         this.company = company;
-        this.questionsStrings = questionsStrings;
     }
 
 
@@ -95,6 +95,7 @@ public class Job {
 
         return questionsStrings;
     }
+
 
 
     public Integer getId() {
@@ -264,5 +265,22 @@ public class Job {
     public void setQuestionsStrings(ArrayList<String> questionsStrings) {
         this.questionsStrings = questionsStrings;
     }
+
+    public ArrayList<Integer> getJobTypesIds() {
+        return this.jobTypesIds;
+    }
+
+    public void setJobTypesIds(ArrayList<Integer> jobTypesIds) {
+        this.jobTypesIds = jobTypesIds;
+    }
+
+    public ArrayList<Integer> getJobSchedulesIds() {
+        return this.jobSchedulesIds;
+    }
+
+    public void setJobSchedulesIds(ArrayList<Integer> jobSchedulesIds) {
+        this.jobSchedulesIds = jobSchedulesIds;
+    }
+    
     
 }

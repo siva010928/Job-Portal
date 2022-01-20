@@ -40,10 +40,23 @@ public class JobProvider extends  User{
         stmt.setInt(8, this.company.getId());
         stmt.setInt(9, last_pay_id);
 
-        //inserting job_schedules
-
         //getting the last inserted job_id        
         int last_job_id=App.getLastInsertId();
+
+        //inserting job_schedules
+        for (Integer job_schedule_id : jobDetails.getJobSchedulesIds()) {
+            stmt=App.conn.prepareStatement("INSERT INTO job_job_schedules VALUES(?,?)");
+            stmt.setInt(1, last_job_id);
+            stmt.setInt(2, job_schedule_id);
+        }
+
+        //inserting job_types
+        for (Integer job_type_id : jobDetails.getJobTypesIds()) {
+            stmt=App.conn.prepareStatement("INSERT INTO job_job_types VALUES(?,?)");
+            stmt.setInt(1, last_job_id);
+            stmt.setInt(2, job_type_id);
+        }
+
 
         //inserting questions into db
         for (String question : jobDetails.getQuestionsAsStrings()) {
