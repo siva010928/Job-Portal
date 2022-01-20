@@ -17,6 +17,8 @@ Project is created with:
 ## flow diagram
 ![miro](https://github.com/siva010928/Job-Portal/blob/main/activity_flow_diagram.jpg)
 
+## database design
+![mysql](https://github.com/siva010928/Job-Portal/blob/main/db.png)
 ## Features
 #### Job Seekers
         * search,filter,view job details and apply to the job
