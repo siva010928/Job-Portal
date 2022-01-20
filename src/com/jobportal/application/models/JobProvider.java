@@ -144,7 +144,6 @@ public class JobProvider extends  User{
             ResultSet rJobtypes=stmt.executeQuery();
 
             ArrayList<String> job_types=new ArrayList<>();
-
             while(rJobtypes.next()){
                 job_types.add(rJobtypes.getString("name"));
             }
