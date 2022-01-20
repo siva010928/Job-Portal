@@ -11,6 +11,11 @@ Project is created with:
 ## Project Status
 #### In development,takes few days to finish.
 
+## class diagram
+![star uml](https://drive.google.com/file/d/1tb3sau9agP1X-KuhpL3DQsc8WYpADfDf/view?usp=sharing)
+
+## flow diagram
+![miro](https://drive.google.com/file/d/1iWxv4MfrHpb7c6pVwyQTBCnerBpC30Ud/view?usp=sharing)
 
 ## Features
 #### Job Seekers
