@@ -1,3 +1,13 @@
+A Job Portal Where 
+              Job Seekers
+                  1)   can view job details and apply to the job
+                  2)  update profile
+                  3)  post a review of a company
+              Job Provider
+                  1)  post/edit a job
+                  2)  join a company as a recruiter
+                  3)  review applications(hiring,rejecting)
+                
 ## Getting Started
 
 Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
