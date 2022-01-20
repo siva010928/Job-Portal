@@ -12,10 +12,10 @@ Project is created with:
 #### In development,takes few days to finish.
 
 ## class diagram
-![star uml](https://drive.google.com/file/d/1tb3sau9agP1X-KuhpL3DQsc8WYpADfDf/view?usp=sharing)
+![star uml](https://github.com/siva010928/Job-Portal/blob/main/class_dia.png)
 
 ## flow diagram
-![miro](https://drive.google.com/file/d/1iWxv4MfrHpb7c6pVwyQTBCnerBpC30Ud/view?usp=sharing)
+![miro](https://github.com/siva010928/Job-Portal/blob/main/activity_flow_diagram.jpg)
 
 ## Features
 #### Job Seekers
