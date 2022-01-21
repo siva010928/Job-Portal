@@ -33,9 +33,7 @@ CREATE TABLE IF NOT EXISTS `job_portal`.`users` (
   `last_name` VARCHAR(255) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
   `password` VARCHAR(64) NULL,
-  `country` VARCHAR(255) NULL,
-  `state` VARCHAR(255) NULL,
-  `city` VARCHAR(255) NULL,
+  `location` VARCHAR(255) NULL,
   `gender` VARCHAR(6) NULL,
   `DOB` DATE NULL,
   `createdAt` DATETIME NULL DEFAULT NOW(),
@@ -58,7 +56,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `job_portal`.`pays` (
   `pay_id` INT NOT NULL AUTO_INCREMENT,
   `from` DECIMAL(19,2) NULL,
-  `To` DECIMAL(19,2) NULL,
+  `to` DECIMAL(19,2) NULL,
   `pay_type` VARCHAR(45) NULL,
   PRIMARY KEY (`pay_id`))
 ENGINE = InnoDB;
@@ -226,6 +224,8 @@ CREATE TABLE IF NOT EXISTS `job_portal`.`jobs` (
   `fullOrPartTime` VARCHAR(45) NULL,
   `openings` INT NULL,
   `job_status` VARCHAR(45) NULL DEFAULT 'OPEN',
+  `education_level` VARCHAR(45) NULL,
+  `candidate_profile` TEXT(65535) NULL,
   `postedAt` DATETIME NOT NULL DEFAULT NOW(),
   `job_provider_id` VARCHAR(45) NOT NULL,
   `company_id` INT NOT NULL,
