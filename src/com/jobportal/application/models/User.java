@@ -4,25 +4,22 @@ import com.jobportal.application.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 public abstract class User {
     private UserType userType;
-    private String firstName,lastName,gender,email,password;
+    private String firstName,lastName,gender,email,password,location;
 
-    public User(String firstName, String lastName, String gender, String email, String password,UserType userType) {
+    public User(String firstName, String lastName, String gender, String email, String password,String location,UserType userType) {
         this.userType = userType;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
         this.email = email;
         this.password = password;
+        this.location=location;
     }
 
-    public UserType getUserType() {
-        return userType;
-    }
 
 
     public static int login(String email,String password) throws SQLException{
@@ -97,7 +94,7 @@ public abstract class User {
                     languages.add(rLanguages.getString("name"));
                 }
 
-                App.logginUser=new JobSeeker(rS.getString("first_name"), rS.getString("last_name"), rS.getString("gender"), rS.getString("email"), rS.getString("password"),UserType.JOB_SEEKER, keySkills, languages, employments, educations, projects, rS1.getString("accomplishments"));
+                App.logginUser=new JobSeeker(rS.getString("first_name"), rS.getString("last_name"), rS.getString("gender"), rS.getString("email"), rS.getString("password"),rS.getString("location"),UserType.JOB_SEEKER, keySkills, languages, employments, educations, projects, rS1.getString("accomplishments"));
             }else{
                 stmt.close();
                 //getting logged in job provider
@@ -116,55 +113,10 @@ public abstract class User {
                 Pay revenue=new Pay(rS.getBigDecimal("from"), rS.getBigDecimal("to"), rS.getString("pay_type"));
                 Company company=new Company(company_id,rCompany.getInt("reviews"), rCompany.getInt("ratings"), rS.getInt("founded"), rS.getInt("size"), rS.getString("name"), rS.getString("logo"), rS.getString("sector"), rS.getString("industry"), rS.getString("location"), revenue);
 
-                App.logginUser=new JobProvider(UserType.JOB_PROVIDER,rS.getString("first_name"), rS.getString("last_name"), rS.getString("gender"), email, password, rSprovider.getString("designation"), company);
+                App.logginUser=new JobProvider(UserType.JOB_PROVIDER,rS.getString("first_name"), rS.getString("last_name"), rS.getString("gender"), email, password,rS.getString("location"), rSprovider.getString("designation"), company);
             }
         }
         return -1;
     }
-
-
-    public String getName() {
-        return firstName+" "+lastName;
-    }
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
 
 }

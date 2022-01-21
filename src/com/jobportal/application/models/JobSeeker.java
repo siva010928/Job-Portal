@@ -9,8 +9,8 @@ public class JobSeeker extends User{
     private ArrayList<Project> projects;
     private String accompolishments;
 
-    public JobSeeker(String firstName, String lastName, String gender, String email, String password, UserType userType, ArrayList<String> keySkills, ArrayList<String> languages, ArrayList<Employment> employments, ArrayList<Education> educations, ArrayList<Project> projects, String accompolishments) {
-        super(firstName, lastName, gender, email, password, userType);
+    public JobSeeker(String firstName, String lastName, String gender, String email, String password,String location,UserType userType, ArrayList<String> keySkills, ArrayList<String> languages, ArrayList<Employment> employments, ArrayList<Education> educations, ArrayList<Project> projects, String accompolishments) {
+        super(firstName, lastName, gender, email, password, location,userType);
         this.keySkills = keySkills;
         this.languages = languages;
         this.employments = employments;
