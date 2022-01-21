@@ -68,9 +68,15 @@ public class JobProvider extends  User{
     }
 
     //PostedJobs optional Filter
-    public ArrayList<Job> getJobs(HashMap<String,String> searchFilter,HashMap<String,Integer> sortFilter) throws SQLException{
+    public ArrayList<Job> getJobs(HashMap<String,String> searchFilter,HashMap<String,Integer> sortFilter,Integer daysFilter) throws SQLException{
         StringBuilder query=new StringBuilder("SELECT * FROM jobs JOIN pays USING(pay_id) JOIN companies USING(company_id) WHERE job_provider_id=?");
         
+        //filterring last 7 days like
+        if(daysFilter!=-1){
+            query.append(" AND ");
+            query.append("postedAt>(DATE_SUB(CURRENT_DATE,INTERVAL "+daysFilter+" DAY))");
+        }
+
         //filtering for where class of job title,location
         for (Map.Entry<String,String> m : searchFilter.entrySet()) {
             query.append(" AND ");

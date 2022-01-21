@@ -9,7 +9,7 @@ import com.jobportal.application.App;
 
 public class Job {
 
-    private Integer id,active,reviewed,hired,rejected,openings;
+    private Integer id,active=-1,reviewed=-1,hired=-1,rejected=-1,openings;
     private String jobTitle,jobDescription,locationType,location,fullOrPartTime,jobStatus,candidateProfile,educationLevel;
     private Pay pay;
     private Date postedAt;
@@ -35,8 +35,27 @@ public class Job {
         this.questionsStrings = questionsStrings;
     }
 
-    
+    //only for getting jobs feed to job seeker
+    public Job(Integer id, Integer openings, String jobTitle, String jobDescription, String locationType, String location, String fullOrPartTime, String jobStatus, String candidateProfile, String educationLevel, Pay pay, Date postedAt, ArrayList<String> jobTypes, ArrayList<String> jobSchedules, ArrayList<Integer> questions, Company company) {
+        this.id = id;
+        this.openings = openings;
+        this.jobTitle = jobTitle;
+        this.jobDescription = jobDescription;
+        this.locationType = locationType;
+        this.location = location;
+        this.fullOrPartTime = fullOrPartTime;
+        this.jobStatus = jobStatus;
+        this.candidateProfile = candidateProfile;
+        this.educationLevel = educationLevel;
+        this.pay = pay;
+        this.postedAt = postedAt;
+        this.jobTypes = jobTypes;
+        this.jobSchedules = jobSchedules;
+        this.questions = questions;
+        this.company = company;
+    }
 
+    //general constructor
     public Job(Integer id, Integer active, Integer reviewed, Integer hired, Integer rejected, Integer openings, String jobTitle, String jobDescription, String locationType, String location, String fullOrPartTime, String jobStatus, String candidateProfile, String educationLevel, Pay pay, Date postedAt, ArrayList<String> jobTypes, ArrayList<String> jobSchedules, ArrayList<Integer> questions, Company company) {
         this.id = id;
         this.active = active;

@@ -12,7 +12,7 @@ public class Application {
     private  Integer id;
 
     
-    public Application(JobSeeker jobSeeker, Job job, String resume, String applicationStatus, LocalDateTime appliedAt, Integer id) {
+    public Application(Integer id,JobSeeker jobSeeker, Job job, String resume, String applicationStatus, LocalDateTime appliedAt) {
         this.jobSeeker = jobSeeker;
         this.job = job;
         this.resume = resume;
