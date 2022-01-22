@@ -22,9 +22,9 @@ public class JobSeeker extends User{
     //for seeing this profile by job provier purpose they should not see job_seeker's password,location
     //for this we want to store id to retrieve educations,projects,etc
     //these information enough for job provider
-    public JobSeeker(Integer id,String firstName, String lastName, String gender,Date DOB,String email) {
+    public JobSeeker(Integer job_seeker_id,String firstName, String lastName, String gender,Date DOB,String email) {
         super(firstName, lastName, gender,DOB,email);
-        this.id=id;
+        this.id=job_seeker_id;
     }
 
     public JobSeeker(String firstName, String lastName, String gender,Date DOB,String email,String location,UserType userType, ArrayList<String> keySkills, ArrayList<String> languages, ArrayList<Employment> employments, ArrayList<Education> educations, ArrayList<Project> projects, String accompolishments) {
@@ -37,6 +37,83 @@ public class JobSeeker extends User{
         this.accompolishments = accompolishments;
         //for sake
         this.id=App.id;
+    }
+    
+    //this method is used for the scenario [job provider comes get list of applicants of job but he not check all job_seeker_extra profiles 
+    //but check maybe one or two in that case 
+    //we only load this extra profile if he select to view full details of particular applicant
+    //otherwise it won't load unnecessary
+    //view candidate full profile their education etc from applications page
+    //during login also this method invoke once
+    public void generateJobseekerProfile()throws SQLException{
+        PreparedStatement stmt=App.conn.prepareStatement("SELECT accomplishments FROM job_seekers WHERE job_seeker_id=?");
+        stmt.setInt(1,this.getId());
+        ResultSet rS1=stmt.executeQuery();
+        rS1.next();
+        String accomplishments=rS1.getString("accomplishments");
+        //getting Projects
+        stmt=App.conn.prepareStatement("SELECT * FROM projects WHERE job_seeker_id=?");
+        stmt.setInt(1, this.getId());
+        ResultSet rProjects=stmt.executeQuery();
+
+        ArrayList<Project> projects=new ArrayList<>();
+
+        while(rProjects.next()){
+            projects.add(new Project(rProjects.getString("title"), rProjects.getString("client"), rProjects.getString("status"), rProjects.getString("link"), rProjects.getString("details"), rProjects.getDate("start"), rProjects.getDate("end")));
+        }
+
+        //getting educations
+        stmt=App.conn.prepareStatement("SELECT * FROM educations WHERE job_seeker_id=?");
+        stmt.setInt(1, this.id);
+        ResultSet rEducations=stmt.executeQuery();
+
+        ArrayList<Education> educations=new ArrayList<>();
+
+        while(rEducations.next()){
+            educations.add(new Education(rEducations.getString("educationLevel"), rEducations.getString("specialization"), rEducations.getString("institution"), rEducations.getString("course_type"), rEducations.getInt("passout")));
+        }
+
+        //getting employments
+        stmt=App.conn.prepareStatement("SELECT * FROM employments WHERE job_seeker_id=?");
+        stmt.setInt(1, this.id);
+        ResultSet rEmployments=stmt.executeQuery();
+
+        ArrayList<Employment> employments=new ArrayList<>();
+
+        while(rEmployments.next()){
+            employments.add(new Employment(rEmployments.getString("organization"), rEmployments.getString("designation"), rEmployments.getDate("start_date"), rEmployments.getDate("end_date"), rEmployments.getBoolean("stillWorking")));
+        }
+        
+
+        //getting key_skills
+        stmt=App.conn.prepareStatement("SELECT * FROM seeker_skills JOIN key_skills USING(key_skill_id) WHERE job_seeker_id=?");
+        stmt.setInt(1, this.id);
+        ResultSet rSkills=stmt.executeQuery();
+
+        ArrayList<String> keySkills=new ArrayList<>();
+
+        while(rSkills.next()){
+            keySkills.add(rSkills.getString("name"));
+        }
+
+        //getting languages
+        stmt=App.conn.prepareStatement("SELECT * FROM seeker_languages JOIN languages USING(language_id) WHERE job_seeker_id=?");
+        stmt.setInt(1, this.id);
+        ResultSet rLanguages=stmt.executeQuery();
+
+        ArrayList<String> languages=new ArrayList<>();
+
+        while(rLanguages.next()){
+            languages.add(rLanguages.getString("name"));
+        }
+
+        //setting all
+        this.setAccompolishments(accomplishments);
+        this.setProjects(projects);
+        this.setEducations(educations);
+        this.setEmployments(employments);
+        this.setKeySkills(keySkills);
+        this.setLanguages(languages);
     }
 
     //Jobs Feed  job seeker optional Filter
@@ -140,6 +217,9 @@ public class JobSeeker extends User{
     //getting my-Jobs menu for job seeker
     // public
 
+    public Integer getId(){
+        return this.id;
+    }
     public ArrayList<String> getKeySkills() {
         return keySkills;
     }
