@@ -2,6 +2,7 @@ package com.jobportal.application.models;
 
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,8 +16,8 @@ public class JobProvider extends  User{
     private String designation;
     private Company company;
 
-    public JobProvider(UserType userType, String firstName, String lastName, String gender, String email, String password,String location,String designation, Company company) {
-        super(firstName, lastName, gender, email, password,location,userType);
+    public JobProvider(UserType userType, String firstName, String lastName, String gender,Date DOB,String email,String location,String designation, Company company) {
+        super(firstName, lastName, gender,DOB,email,location,userType);
         this.designation = designation;
         this.company = company;
     }
@@ -59,7 +60,7 @@ public class JobProvider extends  User{
 
 
         //inserting questions into db
-        for (String question : jobDetails.getQuestionsAsStrings()) {
+        for (String question : jobDetails.generateQuestionsAsStrings()) {
             stmt=App.conn.prepareStatement("INSERT INTO questions(question,job_id) VALUES(?,?)");
             stmt.setString(1, question);
             stmt.setInt(2, last_job_id);
@@ -177,17 +178,7 @@ public class JobProvider extends  User{
             while(rJobschedules.next()){
                 job_schedules.add(rJobtypes.getString("name"));
             }
-            //getting questions id for a particular job
-            stmt=App.conn.prepareStatement("SELECT * FROM questions WHERE job_id=?");
-            stmt.setInt(1,job_id);
-            ResultSet rQuestions=stmt.executeQuery();
-
-            ArrayList<Integer> questions=new ArrayList<>();
-
-            while(rQuestions.next()){
-                questions.add(rQuestions.getInt("question_id"));
-            }
-            jobs.add(new Job(job_id, active, reviewed, hired, rejected, rS.getInt("openings"),rS.getString("title"), rS.getString("description"), rS.getString("location_type"), rS.getString("location"), rS.getString("fullOrPartTime"), rS.getString("job_status"), rS.getString("candidate_profile"), rS.getString("education_level"), salaryPay, rS.getDate("postedAt"), job_types, job_schedules,questions,company));
+            jobs.add(new Job(job_id, active, reviewed, hired, rejected, rS.getInt("openings"),rS.getString("title"), rS.getString("description"), rS.getString("location_type"), rS.getString("location"), rS.getString("fullOrPartTime"), rS.getString("job_status"), rS.getString("candidate_profile"), rS.getString("education_level"), salaryPay, rS.getTimestamp("postedAt"), job_types, job_schedules,company));
         }
         return jobs;
     }

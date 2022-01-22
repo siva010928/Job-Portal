@@ -1,5 +1,6 @@
 package com.jobportal.application.models;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,26 +9,37 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.jobportal.application.App;
-import com.mysql.cj.xdevapi.Result;
 
 public class JobSeeker extends User{
+    private Integer id;
     private ArrayList<String> keySkills,languages;
     private ArrayList<Employment> employments;
     private ArrayList<Education> educations;
     private ArrayList<Project> projects;
     private String accompolishments;
 
-    public JobSeeker(String firstName, String lastName, String gender, String email, String password,String location,UserType userType, ArrayList<String> keySkills, ArrayList<String> languages, ArrayList<Employment> employments, ArrayList<Education> educations, ArrayList<Project> projects, String accompolishments) {
-        super(firstName, lastName, gender, email, password, location,userType);
+
+    //for seeing this profile by job provier purpose they should not see job_seeker's password,location
+    //for this we want to store id to retrieve educations,projects,etc
+    //these information enough for job provider
+    public JobSeeker(Integer id,String firstName, String lastName, String gender,Date DOB,String email) {
+        super(firstName, lastName, gender,DOB,email);
+        this.id=id;
+    }
+
+    public JobSeeker(String firstName, String lastName, String gender,Date DOB,String email,String location,UserType userType, ArrayList<String> keySkills, ArrayList<String> languages, ArrayList<Employment> employments, ArrayList<Education> educations, ArrayList<Project> projects, String accompolishments) {
+        super(firstName, lastName, gender,DOB,email, location,userType);
         this.keySkills = keySkills;
         this.languages = languages;
         this.employments = employments;
         this.educations = educations;
         this.projects = projects;
         this.accompolishments = accompolishments;
+        //for sake
+        this.id=App.id;
     }
 
-    //Jobs Feed fro job seeker optional Filter
+    //Jobs Feed  job seeker optional Filter
     public ArrayList<Job> getJobs(HashMap<String,String> searchFilter,HashMap<String,Integer> sortFilter,Integer daysFilter,Integer salaryFilter) throws SQLException{
         StringBuilder query=new StringBuilder("SELECT * FROM jobs JOIN pays USING(pay_id) JOIN companies USING(company_id) WHERE 1=1");
         
@@ -66,8 +78,6 @@ public class JobSeeker extends User{
         }
 
         PreparedStatement stmt=App.conn.prepareStatement(query.toString());
-        
-        stmt.setInt(1, App.id);
         ArrayList<Job> jobs=new ArrayList<>();
         ResultSet rS=stmt.executeQuery();
         while(rS.next()){
@@ -122,7 +132,7 @@ public class JobSeeker extends User{
             while(rQuestions.next()){
                 questions.add(rQuestions.getInt("question_id"));
             }
-            jobs.add(new Job(job_id,rS.getInt("openings"),rS.getString("title"), rS.getString("description"), rS.getString("location_type"), rS.getString("location"), rS.getString("fullOrPartTime"), rS.getString("job_status"), rS.getString("candidate_profile"), rS.getString("education_level"), salaryPay, rS.getDate("postedAt"), job_types, job_schedules,questions,company));
+            jobs.add(new Job(job_id,rS.getInt("openings"),rS.getString("title"), rS.getString("description"), rS.getString("location_type"), rS.getString("location"), rS.getString("fullOrPartTime"), rS.getString("job_status"), rS.getString("candidate_profile"), rS.getString("education_level"), salaryPay, rS.getTimestamp("postedAt"), job_types, job_schedules,company));
         }
         return jobs;
     }

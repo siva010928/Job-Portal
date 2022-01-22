@@ -1,7 +1,15 @@
 package com.jobportal.application.models;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
+
+import com.jobportal.application.App;
 
 public class Application {
     private ArrayList<String> answers;
@@ -12,22 +20,43 @@ public class Application {
     private  Integer id;
 
     
-    public Application(Integer id,JobSeeker jobSeeker, Job job, String resume, String applicationStatus, LocalDateTime appliedAt) {
+    public Application(Integer id,JobSeeker jobSeeker, Job job, String resume, String applicationStatus, Timestamp appliedAt) {
         this.jobSeeker = jobSeeker;
         this.job = job;
         this.resume = resume;
         this.applicationStatus = applicationStatus;
-        this.appliedAt = appliedAt;
+        //timestamp.toInstant().atZone(zoneId).toLocalDate()
+        //ZoneOffset.UTC
+        this.appliedAt = appliedAt.toInstant().atZone(ZoneOffset.UTC).toLocalDateTime();
         this.id = id;
     }
-    public Application(ArrayList<String> answers,JobSeeker jobSeeker, Job job, String resume, String applicationStatus, LocalDateTime appliedAt, Integer id) {
+    public Application(Integer id,ArrayList<String> answers,JobSeeker jobSeeker, Job job, String resume, String applicationStatus, LocalDateTime appliedAt) {
         this.answers = answers;
         this.jobSeeker = jobSeeker;
         this.job = job;
         this.resume = resume;
         this.applicationStatus = applicationStatus;
         this.appliedAt = appliedAt;
-        this.id = id;
+    }
+    public ArrayList<String> generateAnswers() throws SQLException{
+        ArrayList<String> answers=new ArrayList<>();
+
+        int job_id=this.job.getId();
+        PreparedStatement stmt=App.conn.prepareStatement("SELECT * FROM seeker_answers WHERE application_id=?");
+        stmt.setInt(1, this.getId());
+        ResultSet rAnswers=stmt.executeQuery();
+        while(rAnswers.next()){
+            answers.add(rAnswers.getString("answer"));
+        }
+        return this.answers=answers;
+    }
+
+    public void updateStatus(String updatedStatus) throws SQLException{
+        this.setApplicationStatus(applicationStatus);
+        PreparedStatement stmt=App.conn.prepareStatement("UPDATE applications SET status=? WHERE application_id=?");
+        stmt.setString(1,updatedStatus);
+        stmt.setInt(2, this.getId());
+        int writtenResults=stmt.executeUpdate();
     }
 
     public ArrayList<String> getAnswers() {

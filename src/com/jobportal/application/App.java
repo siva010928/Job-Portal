@@ -8,6 +8,7 @@ import java.util.HashMap;
 import com.jobportal.application.models.User;
 public class App {
     public static Connection conn;
+    public static Integer user_id;
     public static Integer id;//job-provider/job-seeker id
     public static User logginUser;
     public static HashMap<Integer,String> job_types,job_schedules;

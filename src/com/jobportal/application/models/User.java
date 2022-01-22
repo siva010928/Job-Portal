@@ -1,35 +1,55 @@
 package com.jobportal.application.models;
 
 import com.jobportal.application.*;
+
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class User {
     private UserType userType;
-    private String firstName,lastName,gender,email,password,location;
+    private String firstName,lastName,gender,email,location;
+    private Date DOB;
 
-    public User(String firstName, String lastName, String gender, String email, String password,String location,UserType userType) {
+
+    //for seeing this profile by job provier purpose they should not see job_seeker's password
+    //these information enough for job provider
+    public User(String firstName, String lastName, String gender, Date DOB,String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.DOB=DOB;
+        this.email = email;
+    }
+
+    public User(String firstName, String lastName, String gender,Date DOB,String email,String location,UserType userType) {
         this.userType = userType;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
         this.email = email;
-        this.password = password;
+        this.DOB = DOB;
         this.location=location;
     }
-
-
 
     public static int login(String email,String password) throws SQLException{
         PreparedStatement stmt=App.conn.prepareStatement("SELECT * FROM users u JOIN user_types ut ON u.user_type_id=ut.user_type_id WHERE email=? AND password=? ");
         stmt.setString(1, email);
         stmt.setString(2, password);
+        //hash password
+
 
         ResultSet rS=stmt.executeQuery();
 
         if(rS.next()){
+            App.user_id=rS.getInt("user_id");
             String category=rS.getString("category");
             if(category==UserType.JOB_SEEKER.toString()){
                 stmt=App.conn.prepareStatement("SELECT * FROM job_seekers WHERE user_id=?");
@@ -94,7 +114,7 @@ public abstract class User {
                     languages.add(rLanguages.getString("name"));
                 }
 
-                App.logginUser=new JobSeeker(rS.getString("first_name"), rS.getString("last_name"), rS.getString("gender"), rS.getString("email"), rS.getString("password"),rS.getString("location"),UserType.JOB_SEEKER, keySkills, languages, employments, educations, projects, rS1.getString("accomplishments"));
+                App.logginUser=new JobSeeker(rS.getString("first_name"), rS.getString("last_name"), rS.getString("gender"),rS.getDate("DOB"),rS.getString("email"),rS.getString("location"),UserType.JOB_SEEKER, keySkills, languages, employments, educations, projects, rS1.getString("accomplishments"));
             }else{
                 stmt.close();
                 //getting logged in job provider
@@ -113,11 +133,38 @@ public abstract class User {
                 Pay revenue=new Pay(rS.getBigDecimal("from"), rS.getBigDecimal("to"), rS.getString("pay_type"));
                 Company company=new Company(company_id,rCompany.getInt("reviews"), rCompany.getInt("ratings"), rS.getInt("founded"), rS.getInt("size"), rS.getString("name"), rS.getString("logo"), rS.getString("sector"), rS.getString("industry"), rS.getString("location"), revenue);
 
-                App.logginUser=new JobProvider(UserType.JOB_PROVIDER,rS.getString("first_name"), rS.getString("last_name"), rS.getString("gender"), email, password,rS.getString("location"), rSprovider.getString("designation"), company);
+                App.logginUser=new JobProvider(UserType.JOB_PROVIDER,rS.getString("first_name"), rS.getString("last_name"), rS.getString("gender"),rS.getDate("DOB"),email,rS.getString("location"), rSprovider.getString("designation"), company);
             }
         }
         return -1;
     }
+
+    public static void updateProfile(HashMap<String,String> updateStrings,String DOBupdates) throws ParseException{
+        PreparedStatement stmt;
+        int writtenResults;
+        if(!DOBupdates.isEmpty()){
+            DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
+            java.util.Date date = formatter.parse(DOBupdates);
+            java.sql.Date DOB = new java.sql.Date(date.getTime()); // convert java.util.date to java.sql.date
+
+            App.logginUser.setDOB(DOB);
+            stmt=App.conn.prepareStatement("UPDATE users SET DOB=? WHERE user_id=?");
+            stmt.setDate(1, DOB);
+            stmt.setInt(2,App.user_id);
+            writtenResults=stmt.executeUpdate();
+        }
+        if(!updateStrings.isEmpty()){
+            StringBuilder query=new StringBuilder("UPDATE users SET user_id=user_id");
+            for (Map.Entry<String,String> m : updateStrings.entrySet()) {
+                query.append(",");
+                query.append(m.getKey()+" = "+m.getValue());
+            }
+            query.append("WHERE user_id=?");
+            stmt=App.conn.prepareStatement(query.toString());
+            writtenResults=stmt.executeUpdate();
+        }
+    }
+    
 
     public UserType getUserType() {
         return this.userType;
@@ -159,20 +206,20 @@ public abstract class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return this.password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getLocation() {
         return this.location;
     }
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public Date getDOB() {
+        return this.DOB;
+    }
+
+    public void setDOB(Date DOB) {
+        this.DOB = DOB;
     }
 
 }
