@@ -192,16 +192,15 @@ public class JobProvider extends  User{
         return jobs;
     }
 
+    @Override
+    public void generateProfile() throws SQLException {
+        
+        
+    }
 
     //update their additional profile
     @Override
     public void updateProfile() throws SQLException {
-        
-    }
-
-    @Override
-    public void generateProfile() throws SQLException {
-        // TODO Auto-generated method stub
         
     }
 

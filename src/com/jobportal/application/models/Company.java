@@ -6,6 +6,7 @@ public class Company {
     private String name,logo,sector,industry,location;
     private Pay revenue;
 
+    
     public Company(Integer id,Integer reviews, Integer ratings, Integer founded, Integer size, String name, String logo, String sector, String industry, String location, Pay revenue) {
         this.id=id;
         this.reviews = reviews;

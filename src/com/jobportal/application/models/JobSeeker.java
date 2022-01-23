@@ -27,6 +27,7 @@ public class JobSeeker extends User{
         this.id=job_seeker_id;
     }
 
+    //only for login
     public JobSeeker(String firstName, String lastName, String gender,Date DOB,String email,String location,UserType userType, ArrayList<String> keySkills, ArrayList<String> languages, ArrayList<Employment> employments, ArrayList<Education> educations, ArrayList<Project> projects, String accompolishments) {
         super(firstName, lastName, gender,DOB,email, location,userType);
         this.keySkills = keySkills;
@@ -141,9 +142,9 @@ public class JobSeeker extends User{
         //filtering for where class of job title,location
         for (Map.Entry<String,String> m : searchFilter.entrySet()) {
             query.append(" AND ");
-            query.append(m.getKey());
+            query.append(m.getKey());//field name
             query.append("LIKE");
-            query.append("%"+m.getValue()+"%");
+            query.append("%"+m.getValue()+"%");//field value
         }
 
         //filtering for order by class of postedAt,title(sort) it will be always the size of one
@@ -202,16 +203,16 @@ public class JobSeeker extends User{
             while(rJobschedules.next()){
                 job_schedules.add(rJobtypes.getString("name"));
             }
-            //getting questions id for a particular job
-            stmt=App.conn.prepareStatement("SELECT * FROM questions WHERE job_id=?");
-            stmt.setInt(1,job_id);
-            ResultSet rQuestions=stmt.executeQuery();
+            // //getting questions id for a particular job
+            // stmt=App.conn.prepareStatement("SELECT * FROM questions WHERE job_id=?");
+            // stmt.setInt(1,job_id);
+            // ResultSet rQuestions=stmt.executeQuery();
 
-            ArrayList<Integer> questions=new ArrayList<>();
+            // ArrayList<Integer> questions=new ArrayList<>();
 
-            while(rQuestions.next()){
-                questions.add(rQuestions.getInt("question_id"));
-            }
+            // while(rQuestions.next()){
+            //     questions.add(rQuestions.getInt("question_id"));
+            // }
             jobs.add(new Job(job_id,rS.getInt("openings"),rS.getString("title"), rS.getString("description"), rS.getString("location_type"), rS.getString("location"), rS.getString("fullOrPartTime"), rS.getString("job_status"), rS.getString("candidate_profile"), rS.getString("education_level"), salaryPay, rS.getTimestamp("postedAt"), job_types, job_schedules,company));
         }
         return jobs;
@@ -224,7 +225,7 @@ public class JobSeeker extends User{
     }
 
 
-    //getting my-Jobs menu for job seeker
+    //getting my-Jobs menu for job seeker 
 
     public Integer getId(){
         return this.id;

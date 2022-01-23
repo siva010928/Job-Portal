@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import com.jobportal.application.models.User;
 public class App {
+    
     public static Connection conn;
     public static Integer user_id=-1;
     public static Integer id=-1;//job-provider/job-seeker id

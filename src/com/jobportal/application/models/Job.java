@@ -5,7 +5,6 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +17,7 @@ public class Job {
     private Pay pay;
     private LocalDateTime postedAt;
     ArrayList<String> jobTypes,jobSchedules;
-    ArrayList<Integer> questions;
+    ArrayList<Integer> questions;//question ids
     private Company company;
 
     //only for posting a job
@@ -96,6 +95,7 @@ public class Job {
         //at first this job does not load any questionsIds and questionsStrings
         //at this calling of method,sure job provider will review atleast one applicants so they need to see their's answers with questions
         this.generateQuestionsIds();
+        
         int job_id=this.getId();
         StringBuilder query=new StringBuilder("SELECT * FROM applications JOIN job_seekers USING(job_seeker_id) JOIN users USING(user_id) WHERE job_id=?");
         
@@ -139,12 +139,15 @@ public class Job {
         //to prevent that cause ,Transaction is implemented(auto commit is turned off) refer -https://docs.oracle.com/javase/tutorial/jdbc/basics/transactions.html
         try{
             App.conn.setAutoCommit(false);
+            //one transaction
+
             PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO applications(resume,job_seeker_id,job_id) VALUES(?,?,?)");
             stmt.setString(1, resume);
             stmt.setInt(2, App.id);
             stmt.setInt(3, job_id);
             int rowsAffected=stmt.executeUpdate();
             stmt.close();
+
 
             //inserting answers
             int application_id=App.getLastInsertId();
@@ -156,15 +159,23 @@ public class Job {
                 rowsAffected=stmt.executeUpdate();
             }
             App.conn.commit();
-            App.conn.setAutoCommit(true);
         }catch(SQLException e){
             e.printStackTrace();
             try {
                 System.err.println("Transaction rolled back at Job.applyJob method");
                 App.conn.rollback();
+                
             } catch (SQLException e1) {
                 e1.printStackTrace();
 
+            }
+        }
+        finally{
+            try {
+                App.conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
         }
     }
