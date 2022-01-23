@@ -45,7 +45,8 @@ public class JobSeeker extends User{
     //otherwise it won't load unnecessary
     //view candidate full profile their education etc from applications page
     //during login also this method invoke once
-    public void generateJobseekerProfile()throws SQLException{
+    @Override
+    public void generateProfile()throws SQLException{
         PreparedStatement stmt=App.conn.prepareStatement("SELECT accomplishments FROM job_seekers WHERE job_seeker_id=?");
         stmt.setInt(1,this.getId());
         ResultSet rS1=stmt.executeQuery();
@@ -116,8 +117,10 @@ public class JobSeeker extends User{
         this.setLanguages(languages);
     }
 
+    
     //Jobs Feed  job seeker optional Filter
-    public ArrayList<Job> getJobs(HashMap<String,String> searchFilter,HashMap<String,Integer> sortFilter,Integer daysFilter,Integer salaryFilter) throws SQLException{
+    @Override
+    public ArrayList<Job> getJobsFeed(HashMap<String,String> searchFilter,HashMap<String,Integer> sortFilter,Integer daysFilter,Integer salaryFilter) throws SQLException{
         StringBuilder query=new StringBuilder("SELECT * FROM jobs JOIN pays USING(pay_id) JOIN companies USING(company_id) WHERE 1=1");
         
 
@@ -214,8 +217,14 @@ public class JobSeeker extends User{
         return jobs;
     }
 
+    //update their additional profile
+    @Override
+    public void updateProfile() throws SQLException {
+        
+    }
+
+
     //getting my-Jobs menu for job seeker
-    // public
 
     public Integer getId(){
         return this.id;
@@ -267,4 +276,5 @@ public class JobSeeker extends User{
     public void setAccompolishments(String accompolishments) {
         this.accompolishments = accompolishments;
     }
+
 }

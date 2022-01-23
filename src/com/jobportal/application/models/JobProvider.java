@@ -69,9 +69,18 @@ public class JobProvider extends  User{
     }
 
     //PostedJobs optional Filter
-    public ArrayList<Job> getJobs(HashMap<String,String> searchFilter,HashMap<String,Integer> sortFilter,Integer daysFilter) throws SQLException{
+    @Override
+    public ArrayList<Job> getJobsFeed(HashMap<String,String> searchFilter,HashMap<String,Integer> sortFilter,Integer daysFilter,Integer salaryFilter) throws SQLException{
         StringBuilder query=new StringBuilder("SELECT * FROM jobs JOIN pays USING(pay_id) JOIN companies USING(company_id) WHERE job_provider_id=?");
         
+        //
+        //filtering by salary
+        if(salaryFilter!=-1){
+            //(pays.from >= 17000 OR pays.to >= 17000)
+            query.append(" AND ");
+            query.append("(pays.from >= "+salaryFilter +" OR pays.to >= 17000) ");
+        }
+
         //filterring last 7 days like
         if(daysFilter!=-1){
             query.append(" AND ");
@@ -183,6 +192,19 @@ public class JobProvider extends  User{
         return jobs;
     }
 
+
+    //update their additional profile
+    @Override
+    public void updateProfile() throws SQLException {
+        
+    }
+
+    @Override
+    public void generateProfile() throws SQLException {
+        // TODO Auto-generated method stub
+        
+    }
+
     public String getDesignation() {
         return designation;
     }
@@ -197,7 +219,7 @@ public class JobProvider extends  User{
 
     public void setCompany(Company company) {
         this.company = company;
-    }
+    }    
 
    
 }

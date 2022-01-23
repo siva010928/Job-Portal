@@ -2,6 +2,7 @@ package com.jobportal.application.models;
 
 import com.jobportal.application.*;
 
+import java.lang.System.Logger;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,78 +41,87 @@ public abstract class User {
     }
 
     public static int login(String email,String password) throws SQLException{
-        PreparedStatement stmt=App.conn.prepareStatement("SELECT * FROM users JOIN user_types USING(user_type_id) WHERE email=? AND password=? ");
+        PreparedStatement stmt=App.conn.prepareStatement("SELECT * FROM users JOIN user_types USING(user_type_id) WHERE email=? ");
         stmt.setString(1, email);
-        stmt.setString(2, password);
         //hash password
 
-
         ResultSet rS=stmt.executeQuery();
+        if(rS.isBeforeFirst()){
+            rS.next();
+            String retrievedPassword=rS.getString("password");
+            if(password.equals(retrievedPassword)){
+                App.user_id=rS.getInt("user_id");
+                String category=rS.getString("category");
+                if(category==UserType.JOB_SEEKER.toString()){
+                    ResultSet temp_seekerResult=App.conn.prepareStatement("SELECT job_seeker_id FROM job_seekers WHERE user_id="+App.user_id).executeQuery();
+                    temp_seekerResult.next();
 
-        if(rS.next()){
-            App.user_id=rS.getInt("user_id");
-            String category=rS.getString("category");
-            if(category==UserType.JOB_SEEKER.toString()){
-                ResultSet temp_seekerResult=App.conn.prepareStatement("SELECT job_seeker_id FROM job_seekers WHERE user_id="+App.user_id).executeQuery();
-                temp_seekerResult.next();
-                
-                int job_seeker_id=temp_seekerResult.getInt("job_seeker_id");
-                App.logginUser=new JobSeeker(job_seeker_id,rS.getString("first_name"), rS.getString("last_name"), rS.getString("gender"),rS.getDate("DOB"),rS.getString("email"));
-                App.logginUser.setLocation(rS.getString("location"));
-                App.logginUser.setUserType(UserType.JOB_SEEKER);
-                App.id=job_seeker_id;
-            }else{
-                stmt.close();
-                //getting logged in job provider
-                stmt=App.conn.prepareStatement("SELECT * FROM job_providers JOIN companies USING (company_id) JOIN pays ON pays.pay_id=companies.revenue_id WHERE user_id=?");
-                stmt.setInt(1, rS.getInt("user_id"));
-                ResultSet rSprovider=stmt.executeQuery();
-                rSprovider.next();
+                    int job_seeker_id=temp_seekerResult.getInt("job_seeker_id");
+                    App.logginUser=(JobSeeker)new JobSeeker(job_seeker_id,rS.getString("first_name"), rS.getString("last_name"), rS.getString("gender"),rS.getDate("DOB"),rS.getString("email"));
+                    App.logginUser.setLocation(rS.getString("location"));
+                    App.logginUser.setUserType(UserType.JOB_SEEKER);
+                    App.id=job_seeker_id;
+                    App.logginUser.generateProfile();
+                }else{
+                    stmt.close();
+                    //getting logged in job provider
+                    stmt=App.conn.prepareStatement("SELECT * FROM job_providers JOIN companies USING (company_id) JOIN pays ON pays.pay_id=companies.revenue_id WHERE user_id=?");
+                    stmt.setInt(1, rS.getInt("user_id"));
+                    ResultSet rSprovider=stmt.executeQuery();
+                    rSprovider.next();
 
-                App.id=rSprovider.getInt("job_provider_id");
-                Integer company_id=rSprovider.getInt("company_id");
+                    App.id=rSprovider.getInt("job_provider_id");
+                    Integer company_id=rSprovider.getInt("company_id");
 
-                //getting company details of the job provider
-                stmt=App.conn.prepareStatement("SELECT COUNT(*) AS reviews,AVG(ratings) AS ratings FROM reviews WHERE company_id=?");
-                stmt.setInt(1, company_id);
-                ResultSet rCompany=stmt.executeQuery();
-                rCompany.next();
+                    //getting company details of the job provider
+                    stmt=App.conn.prepareStatement("SELECT COUNT(*) AS reviews,AVG(ratings) AS ratings FROM reviews WHERE company_id=?");
+                    stmt.setInt(1, company_id);
+                    ResultSet rCompany=stmt.executeQuery();
+                    rCompany.next();
 
-                Pay revenue=new Pay(rS.getBigDecimal("from"), rS.getBigDecimal("to"), rS.getString("pay_type"));
-                Company company=new Company(company_id,rCompany.getInt("reviews"), rCompany.getInt("ratings"), rS.getInt("founded"), rS.getInt("size"), rS.getString("name"), rS.getString("logo"), rS.getString("sector"), rS.getString("industry"), rS.getString("location"), revenue);
+                    Pay revenue=new Pay(rS.getBigDecimal("from"), rS.getBigDecimal("to"), rS.getString("pay_type"));
+                    Company company=new Company(company_id,rCompany.getInt("reviews"), rCompany.getInt("ratings"), rS.getInt("founded"), rS.getInt("size"), rS.getString("name"), rS.getString("logo"), rS.getString("sector"), rS.getString("industry"), rS.getString("location"), revenue);
 
-                App.logginUser=new JobProvider(UserType.JOB_PROVIDER,rS.getString("first_name"), rS.getString("last_name"), rS.getString("gender"),rS.getDate("DOB"),email,rS.getString("location"), rSprovider.getString("designation"), company);
+                    App.logginUser=new JobProvider(UserType.JOB_PROVIDER,rS.getString("first_name"), rS.getString("last_name"), rS.getString("gender"),rS.getDate("DOB"),email,rS.getString("location"), rSprovider.getString("designation"), company);
+                }
             }
+            else{
+                    //wrong password but user exists
+            }
+        }else{
+            //user does not exist
         }
-        return -1;
+        return App.id;
     }
 
-    public static void updateProfile(HashMap<String,String> updateStrings,String DOBupdates) throws ParseException, SQLException{
-        PreparedStatement stmt;
-        int writtenResults=0;
-        if(!DOBupdates.isEmpty()){
-            DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
-            java.util.Date date = formatter.parse(DOBupdates);
-            java.sql.Date DOB = new java.sql.Date(date.getTime()); // convert java.util.date to java.sql.date
+    public  void updateBaseProfile(HashMap<String,String> updateStrings,String DOBupdates) throws ParseException, SQLException{
+        
+        //can be used in MAIN class
+        // DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
+        // java.util.Date date = formatter.parse(DOBupdates);
+        // java.sql.Date DOB = new java.sql.Date(date.getTime()); // convert java.util.date to java.sql.date
+        // App.logginUser.setDOB(DOB);
+        // App.logginUser.setEmail(email);
+        // App.logginUser.setFirstName(firstName);
+        // App.logginUser.setGender(gender);
+        // App.logginUser.setLastName(lastName);
+        // App.logginUser.setLocation(location);
 
-            App.logginUser.setDOB(DOB);
-            stmt=App.conn.prepareStatement("UPDATE users SET DOB=? WHERE user_id=?");
-            stmt.setDate(1, DOB);
-            stmt.setInt(2,App.user_id);
-            writtenResults=stmt.executeUpdate();
-        }
-        if(!updateStrings.isEmpty()){
-            StringBuilder query=new StringBuilder("UPDATE users SET user_id=user_id");
-            for (Map.Entry<String,String> m : updateStrings.entrySet()) {
-                query.append(",");
-                query.append(m.getKey()+" = "+m.getValue());
-            }
-            query.append("WHERE user_id=?");
-            stmt=App.conn.prepareStatement(query.toString());
-            writtenResults=stmt.executeUpdate();
-        }
+        PreparedStatement stmt;
+        stmt=App.conn.prepareStatement("UPDATE users SET first_name=?,last_name=?,email=?,gender=?,DOB=?,location=? WHERE user_id=?");
+        stmt.setString(1, this.getFirstName());
+        stmt.setString(2, this.getLastName());
+        stmt.setString(3, this.getEmail());
+        stmt.setString(4, this.getGender());
+        stmt.setDate(5, this.getDOB());
+        stmt.setString(6, this.getLocation());
+        int writtenResults=stmt.executeUpdate();
     }
     
+    //both seeker and providers jobs feed
+    public abstract  ArrayList<Job> getJobsFeed(HashMap<String,String> searchFilter,HashMap<String,Integer> sortFilter,Integer daysFilter,Integer salaryFilter) throws SQLException;
+    public abstract void updateProfile() throws SQLException;
+    public abstract void generateProfile() throws SQLException;
 
     public UserType getUserType() {
         return this.userType;
