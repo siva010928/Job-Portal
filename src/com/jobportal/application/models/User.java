@@ -116,7 +116,9 @@ public abstract class User {
         }
     
 
-        //here we want to use transaction principle 
+        //here we want to use transaction principle because on sign up,
+        //being storing into users db we alsow want to insert in seeker/provider table 
+        //if after inserting into users table if any error happens there will user withou provider/seeker which is unethical
         try{
             App.conn.setAutoCommit(false);
             //one transaction
