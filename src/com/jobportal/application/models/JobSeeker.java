@@ -61,7 +61,7 @@ public class JobSeeker extends User{
         ArrayList<Project> projects=new ArrayList<>();
 
         while(rProjects.next()){
-            projects.add(new Project(rProjects.getString("title"), rProjects.getString("client"), rProjects.getString("status"), rProjects.getString("link"), rProjects.getString("details"), rProjects.getDate("start"), rProjects.getDate("end")));
+            projects.add(new Project(rProjects.getInt("project_id"),rProjects.getString("title"), rProjects.getString("client"), rProjects.getString("status"), rProjects.getString("link"), rProjects.getString("details"), rProjects.getDate("start"), rProjects.getDate("end")));
         }
 
         //getting educations
@@ -72,7 +72,7 @@ public class JobSeeker extends User{
         ArrayList<Education> educations=new ArrayList<>();
 
         while(rEducations.next()){
-            educations.add(new Education(rEducations.getString("educationLevel"), rEducations.getString("specialization"), rEducations.getString("institution"), rEducations.getString("course_type"), rEducations.getInt("passout")));
+            educations.add(new Education(rEducations.getInt("education_id"),rEducations.getString("educationLevel"), rEducations.getString("specialization"), rEducations.getString("institution"), rEducations.getString("course_type"), rEducations.getInt("passout")));
         }
 
         //getting employments
@@ -83,7 +83,7 @@ public class JobSeeker extends User{
         ArrayList<Employment> employments=new ArrayList<>();
 
         while(rEmployments.next()){
-            employments.add(new Employment(rEmployments.getString("organization"), rEmployments.getString("designation"), rEmployments.getDate("start_date"), rEmployments.getDate("end_date"), rEmployments.getBoolean("stillWorking")));
+            employments.add(new Employment(rEmployments.getInt("employment_id"),rEmployments.getString("organization"), rEmployments.getString("designation"), rEmployments.getDate("start_date"), rEmployments.getDate("end_date")));
         }
         
 
@@ -168,7 +168,7 @@ public class JobSeeker extends User{
             int revenue_id=rS.getInt("revenue_id");
             
             //getting pay of the job posted by this job provider
-            Pay salaryPay=new Pay(rS.getBigDecimal("from"),rS.getBigDecimal("to"), rS.getString("pay_type"));
+            Pay salaryPay=new Pay(rS.getInt("pay_id"),rS.getBigDecimal("from"),rS.getBigDecimal("to"), rS.getString("pay_type"));
 
             
             //getting company details of the job posted by this job provider
@@ -180,7 +180,7 @@ public class JobSeeker extends User{
             stmt.setInt(1, revenue_id);
             ResultSet rCompanyRevenue=stmt.executeQuery();
 
-            Pay revenue=new Pay(rCompanyRevenue.getBigDecimal("from"),rCompanyRevenue.getBigDecimal("to"), rCompanyRevenue.getString("pay_type"));
+            Pay revenue=new Pay(rCompanyRevenue.getInt("pay_id"),rCompanyRevenue.getBigDecimal("from"),rCompanyRevenue.getBigDecimal("to"), rCompanyRevenue.getString("pay_type"));
             Company company=new Company(company_id,rCompany.getInt("reviews"), rCompany.getInt("ratings"), rS.getInt("founded"), rS.getInt("size"), rS.getString("name"), rS.getString("logo"), rS.getString("sector"), rS.getString("industry"), rS.getString("location"), revenue);
     
             //getting job_types

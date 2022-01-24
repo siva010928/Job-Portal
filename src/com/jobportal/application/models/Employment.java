@@ -1,31 +1,64 @@
 package com.jobportal.application.models;
 
-import java.util.Date;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import com.jobportal.application.App;
 
 public class Employment {
-    private Integer experience;
+    private Integer id;
     private String designation,organization;
-    private Date start,end=null;
-    private boolean isCurrentCompany;
+    private Date start,end;
+    private boolean isCurrentCompany=false;
 
-    public Employment(String organization,String designation, Date start, Date end, boolean isCurrentCompany) {
+    public Employment(Integer employment_id,String organization,String designation, Date  start, Date end) {
+        this.id=employment_id;
         this.designation = designation;
         this.organization = organization;
         this.start = start;
-        this.end = end;
-        this.isCurrentCompany = isCurrentCompany;
+        //if job seeker works in current employment then he will not give end input and db will store it as null
+        if(end.equals(App.nullDate)){
+            this.isCurrentCompany=true;
+            this.end=App.nullDate;
+        }else this.end=end;
     }
 
-    public int getExperience() {
-        return experience;
+    //when job provider edits his educations list details
+    public void updateEmployment(Employment employment) throws SQLException{
+        this.setStart(employment.getStart());
+        this.setEnd(employment.getEnd());
+        this.setDesignation(employment.getDesignation());
+        this.setOrganization(employment.getOrganization());
+
+        //then update this to  db
+        PreparedStatement stmt=App.conn.prepareStatement("UPDATE employments SET start=?,end=?,designation?,organization=?passout=?,grade=? WHERE employment_id=?");
+        stmt.setDate(1, this.getStart());
+
+        //if job seeker does not fill end date in this education in edit education then set null in databse
+        if(this.getEnd().equals(App.nullDate)){
+            stmt.setNull(2, java.sql.Types.DATE);//updating null to education db
+            this.setIsCurrentCompany(true);
+        }else{
+            stmt.setDate(2, this.getEnd());
+            this.setIsCurrentCompany(false);
+        }
+        stmt.setString(3, this.getDesignation());
+        stmt.setString(4, this.getOrganization());
+
+        int updatedResults=stmt.executeUpdate();
     }
 
-    public void setExperience(int experience) {
-        this.experience = experience;
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getDesignation() {
-        return designation;
+        return this.designation;
     }
 
     public void setDesignation(String designation) {
@@ -33,7 +66,7 @@ public class Employment {
     }
 
     public String getOrganization() {
-        return organization;
+        return this.organization;
     }
 
     public void setOrganization(String organization) {
@@ -41,7 +74,7 @@ public class Employment {
     }
 
     public Date getStart() {
-        return start;
+        return this.start;
     }
 
     public void setStart(Date start) {
@@ -49,19 +82,24 @@ public class Employment {
     }
 
     public Date getEnd() {
-        return end;
+        return this.end;
     }
 
     public void setEnd(Date end) {
-        this.end = end;
+        this.end=end.equals(App.nullDate)?App.nullDate:end;
     }
 
-    public boolean isCurrentCompany() {
-        return isCurrentCompany;
+    public boolean isIsCurrentCompany() {
+        return this.isCurrentCompany;
     }
 
-    public void setCurrentCompany(boolean currentCompany) {
-        isCurrentCompany = currentCompany;
+    public boolean getIsCurrentCompany() {
+        return this.isCurrentCompany;
     }
+
+    public void setIsCurrentCompany(boolean isCurrentCompany) {
+        this.isCurrentCompany = isCurrentCompany;
+    }
+    
 }
 

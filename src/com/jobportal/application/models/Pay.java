@@ -8,11 +8,13 @@ import java.sql.SQLException;
 import com.jobportal.application.App;
 
 public class Pay {
+    private Integer id;
     private BigDecimal from,to;
     private String payType;
 
 
-    public Pay(BigDecimal from, BigDecimal to, String payType) {
+    public Pay(Integer pay_id,BigDecimal from, BigDecimal to, String payType) {
+        this.id=pay_id;
         this.from = from;
         this.to = to;
         this.payType = payType;
@@ -26,6 +28,15 @@ public class Pay {
         int rowsAffected=stmt.executeUpdate();
         int last_pay_id=App.getLastInsertId();
         return last_pay_id;
+    }
+    
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public BigDecimal getFrom() {
@@ -51,8 +62,6 @@ public class Pay {
     public void setPayType(String payType) {
         this.payType = payType;
     }
-
-    
     
     
 }

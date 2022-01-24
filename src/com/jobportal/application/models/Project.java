@@ -1,20 +1,58 @@
 package com.jobportal.application.models;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.sql.Date;
+
+import com.jobportal.application.App;
 
 public class Project {
+    private Integer id;
     private String title,client,status,link,detail;
+    private boolean isCurrentProject=false;
     private Date start,end;
 
-    public Project(String title, String client, String status, String link, String detail, Date start, Date end) {
+    public Project(Integer project_id,String title, String client, String status, String link, String detail, Date start, Date end) {
+        this.id=project_id;
         this.title = title;
         this.client = client;
         this.status = status;
         this.link = link;
         this.detail = detail;
         this.start = start;
-        this.end = end;
+        //if job seeker works in current project then he will not give end input and db will store it as null
+        if(end.equals(App.nullDate)){
+            this.isCurrentProject=true;
+            this.end=App.nullDate;
+        }else this.end=end;
+    }
+
+    public void updateProject(Project project) throws SQLException{
+        this.setTitle(project.getTitle());
+        this.setClient(project.getClient());
+        this.setStatus(project.getStatus());
+        this.setLink(project.getLink());
+        this.setDetail(project.getDetail());
+        this.setStart(project.getStart());
+
+        PreparedStatement stmt=App.conn.prepareStatement("UPDATE projects SET start=?,end=?,title?,client=?status=?,link=?,details=? WHERE project_id=?");
+        stmt.setDate(1, this.getStart());
+        //if job seeker does not fill end date in this project in edit education then set null in databse
+        if(this.getEnd().equals(App.nullDate)){
+            stmt.setNull(2, java.sql.Types.DATE);//updating null to education db
+            this.isCurrentProject=true;
+        }else{
+            stmt.setDate(2, this.getEnd());
+            this.isCurrentProject=false;
+        }
+        stmt.setString(3, this.getTitle());
+        stmt.setString(4, this.getClient());
+        stmt.setString(5, this.getStatus());
+        stmt.setString(6, this.getLink());
+        stmt.setString(7, this.getDetail());
+
+        int updatedResults=stmt.executeUpdate();
     }
 
     public String getTitle() {

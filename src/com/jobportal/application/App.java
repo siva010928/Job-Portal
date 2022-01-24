@@ -7,7 +7,9 @@ import java.util.HashMap;
 
 import com.jobportal.application.models.User;
 public class App {
-    
+
+    //used to check java sql dates retrieve from server is null 
+    public static Date nullDate=Date.valueOf("0000-1-1");//converting string into sql date  
     public static Connection conn;
     public static Integer user_id=-1;
     public static Integer id=-1;//job-provider/job-seeker id

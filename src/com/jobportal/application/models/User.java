@@ -79,7 +79,7 @@ public abstract class User {
                     ResultSet rCompany=stmt.executeQuery();
                     rCompany.next();
 
-                    Pay revenue=new Pay(rS.getBigDecimal("from"), rS.getBigDecimal("to"), rS.getString("pay_type"));
+                    Pay revenue=new Pay(rS.getInt("pay_id"),rS.getBigDecimal("from"), rS.getBigDecimal("to"), rS.getString("pay_type"));
                     Company company=new Company(company_id,rCompany.getInt("reviews"), rCompany.getInt("ratings"), rS.getInt("founded"), rS.getInt("size"), rS.getString("name"), rS.getString("logo"), rS.getString("sector"), rS.getString("industry"), rS.getString("location"), revenue);
 
                     App.logginUser=new JobProvider(UserType.JOB_PROVIDER,rS.getString("first_name"), rS.getString("last_name"), rS.getString("gender"),rS.getDate("DOB"),email,rS.getString("location"), rSprovider.getString("designation"), company);

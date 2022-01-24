@@ -25,7 +25,7 @@ public class JobProvider extends  User{
 
     //post a job from this provider
     public void postJob(Job jobDetails,BigDecimal minSalary,BigDecimal maxSalary) throws SQLException{
-        Pay salaryPay=new Pay(minSalary, maxSalary, "MONTHLY");
+        Pay salaryPay=new Pay(-1,minSalary, maxSalary, "MONTHLY");
         //inserting salary int pays db and getting it's id 
         Integer last_pay_id=salaryPay.addPayToDb();
 
@@ -118,7 +118,7 @@ public class JobProvider extends  User{
             int revenue_id=rS.getInt("revenue_id");
             
             //getting pay of the job posted by this job provider
-            Pay salaryPay=new Pay(rS.getBigDecimal("from"),rS.getBigDecimal("to"), rS.getString("pay_type"));
+            Pay salaryPay=new Pay(rS.getInt("pay_id"),rS.getBigDecimal("from"),rS.getBigDecimal("to"), rS.getString("pay_type"));
 
             
             //getting company details of the job posted by this job provider
@@ -130,7 +130,7 @@ public class JobProvider extends  User{
             stmt.setInt(1, revenue_id);
             ResultSet rCompanyRevenue=stmt.executeQuery();
 
-            Pay revenue=new Pay(rCompanyRevenue.getBigDecimal("from"),rCompanyRevenue.getBigDecimal("to"), rCompanyRevenue.getString("pay_type"));
+            Pay revenue=new Pay(rCompanyRevenue.getInt("pay_id"),rCompanyRevenue.getBigDecimal("from"),rCompanyRevenue.getBigDecimal("to"), rCompanyRevenue.getString("pay_type"));
             Company company=new Company(company_id,rCompany.getInt("reviews"), rCompany.getInt("ratings"), rS.getInt("founded"), rS.getInt("size"), rS.getString("name"), rS.getString("logo"), rS.getString("sector"), rS.getString("industry"), rS.getString("location"), revenue);
 
 

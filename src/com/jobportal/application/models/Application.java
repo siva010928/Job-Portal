@@ -40,7 +40,7 @@ public class Application {
     }
     public ArrayList<String> generateAnswers() throws SQLException{
         ArrayList<String> answers=new ArrayList<>();
-
+        
         int job_id=this.job.getId();
         PreparedStatement stmt=App.conn.prepareStatement("SELECT * FROM seeker_answers WHERE application_id=?");
         stmt.setInt(1, this.getId());
