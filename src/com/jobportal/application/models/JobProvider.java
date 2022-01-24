@@ -16,8 +16,8 @@ public class JobProvider extends  User{
     private String designation;
     private Company company;
 
-    public JobProvider(UserType userType, String firstName, String lastName, String gender,Date DOB,String email,String location,String designation, Company company) {
-        super(firstName, lastName, gender,DOB,email,location,userType);
+    public JobProvider(UserType userType, String firstName, String lastName, String gender,Date DOB,String email,String location,String phone,String designation, Company company) {
+        super(firstName, lastName, gender,DOB,email,location,phone,userType);
         this.designation = designation;
         this.company = company;
     }

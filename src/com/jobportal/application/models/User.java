@@ -16,21 +16,20 @@ import java.util.Map;
 
 public abstract class User {
     private UserType userType;
-    private String firstName,lastName,gender,email,location;
+    private String firstName,lastName,gender,email,location,phone;
     private Date DOB;
 
 
-    //for seeing this profile by job provier purpose they should not see job_seeker's password
+    //for seeing this profile by job provier purpose they should not see job_seeker's location,dob,gender
     //these information enough for job provider
-    public User(String firstName, String lastName, String gender, Date DOB,String email) {
+    public User(String firstName, String lastName,String email) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.gender = gender;
-        this.DOB=DOB;
         this.email = email;
     }
 
-    public User(String firstName, String lastName, String gender,Date DOB,String email,String location,UserType userType) {
+    public User(String firstName, String lastName, String gender,Date DOB,String email,String location,String phone,UserType userType) {
+        this.phone=phone;
         this.userType = userType;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -57,9 +56,14 @@ public abstract class User {
                     temp_seekerResult.next();
 
                     int job_seeker_id=temp_seekerResult.getInt("job_seeker_id");
-                    App.logginUser=(JobSeeker)new JobSeeker(job_seeker_id,rS.getString("first_name"), rS.getString("last_name"), rS.getString("gender"),rS.getDate("DOB"),rS.getString("email"));
+
+                    App.logginUser=(JobSeeker)new JobSeeker(job_seeker_id,rS.getString("first_name"), rS.getString("last_name"),rS.getString("email"));
+                    App.logginUser.setDOB(rS.getDate("DOB"));
+                    App.logginUser.setPhone(rS.getString("phone"));
+                    App.logginUser.setGender(rS.getString("gender"));
                     App.logginUser.setLocation(rS.getString("location"));
                     App.logginUser.setUserType(UserType.JOB_SEEKER);
+
                     App.id=job_seeker_id;
                     App.logginUser.generateProfile();
                 }else{
@@ -82,7 +86,7 @@ public abstract class User {
                     Pay revenue=new Pay(rS.getInt("pay_id"),rS.getBigDecimal("from"), rS.getBigDecimal("to"), rS.getString("pay_type"));
                     Company company=new Company(company_id,rCompany.getInt("reviews"), rCompany.getInt("ratings"), rS.getInt("founded"), rS.getInt("size"), rS.getString("name"), rS.getString("logo"), rS.getString("sector"), rS.getString("industry"), rS.getString("location"), revenue);
 
-                    App.logginUser=new JobProvider(UserType.JOB_PROVIDER,rS.getString("first_name"), rS.getString("last_name"), rS.getString("gender"),rS.getDate("DOB"),email,rS.getString("location"), rSprovider.getString("designation"), company);
+                    App.logginUser=new JobProvider(UserType.JOB_PROVIDER,rS.getString("first_name"), rS.getString("last_name"), rS.getString("gender"),rS.getDate("DOB"),email,rS.getString("location"), rS.getString("phone"),rSprovider.getString("designation"), company);
                 }
             }
             else{
@@ -90,6 +94,99 @@ public abstract class User {
             }
         }else{
             //user does not exist
+        }
+        return App.id;
+    }
+
+
+    public int signUp(User user,String password,String companyName,String designation,String companyLocation){
+
+        int company_id=-1;
+        PreparedStatement stmt;
+        if(designation!=null){
+            try {
+                stmt=App.conn.prepareStatement("SELECT * FROM companies WHERE name=?");
+                stmt.setString(1, companyName);
+                ResultSet rCompany=stmt.executeQuery();
+                if(!rCompany.next()) return -1;
+                company_id=rCompany.getInt("company_id");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    
+
+        //here we want to use transaction principle 
+        try{
+            App.conn.setAutoCommit(false);
+            //one transaction
+
+            //inserting user into users db
+            stmt=App.conn.prepareStatement("INSERT INTO users VALUES(DEFAULT,?,?,?,?,?,?,?,DEFAULT,?,?)");
+            stmt.setString(1, user.getFirstName());
+            stmt.setString(2, user.getLastName());
+            stmt.setString(3, user.getEmail());
+            stmt.setString(4, password);
+            stmt.setString(5, user.getLocation());
+            stmt.setString(6, user.getGender());
+            stmt.setDate(7, user.getDOB());
+            stmt.setInt(8, user.getUserType().getUserTypeId());
+            stmt.setString(9, user.getPhone());
+            
+            int rowsAffected=stmt.executeUpdate();
+
+            //inserting into job_seekers
+            App.user_id=App.getLastInsertId();
+            if(user.getUserType()==UserType.JOB_SEEKER){
+                stmt=App.conn.prepareStatement("INSERT INTO job_seekers(user_id) VALUES(?)");
+                stmt.setInt(1, App.user_id);
+                rowsAffected=stmt.executeUpdate();
+                App.id=App.getLastInsertId();
+            }else{
+                stmt.close();
+
+                if(company_id!=-1){//create new company
+                    stmt=App.conn.prepareStatement("INSERT INTO companies(name,location) VALUES(?,?)");
+                    stmt.setString(1, companyName);
+                    stmt.setString(2, location);
+                    rowsAffected=stmt.executeUpdate();
+                    company_id=App.getLastInsertId();
+
+
+                    stmt=App.conn.prepareStatement("INSERT INTO job_providers(user_id,company_id) VALUES(?,?)");
+                    stmt.setInt(1, App.user_id);
+                    stmt.setInt(2, company_id);
+                    rowsAffected=stmt.executeUpdate();
+                }else{//join an company
+                    stmt.close();
+                    stmt=App.conn.prepareStatement("INSERT INTO job_providers(user_id,designation,company_id) VALUES(?,?,?)");
+                    stmt.setInt(1, App.user_id);
+                    stmt.setString(2, designation);
+                    stmt.setInt(3, company_id);
+                    rowsAffected=stmt.executeUpdate();
+                }
+
+                
+            }
+            App.conn.commit();
+        }catch(SQLException e){
+            e.printStackTrace();
+            try {
+                System.err.println("Transaction rolled back at sign up");
+                App.conn.rollback();
+                
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+
+            }
+        }
+        finally{
+            try {
+                App.conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
         return App.id;
     }
@@ -122,6 +219,7 @@ public abstract class User {
     public abstract  ArrayList<Job> getJobsFeed(HashMap<String,String> searchFilter,HashMap<String,Integer> sortFilter,Integer daysFilter,Integer salaryFilter) throws SQLException;
     public abstract void updateProfile() throws SQLException;
     public abstract void generateProfile() throws SQLException;
+
 
     public UserType getUserType() {
         return this.userType;
@@ -171,6 +269,14 @@ public abstract class User {
         this.location = location;
     }
 
+    public String getPhone() {
+        return this.phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public Date getDOB() {
         return this.DOB;
     }
@@ -178,5 +284,6 @@ public abstract class User {
     public void setDOB(Date DOB) {
         this.DOB = DOB;
     }
+   
 
 }

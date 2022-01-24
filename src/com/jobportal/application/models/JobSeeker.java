@@ -22,14 +22,14 @@ public class JobSeeker extends User{
     //for seeing this profile by job provier purpose they should not see job_seeker's password,location
     //for this we want to store id to retrieve educations,projects,etc
     //these information enough for job provider
-    public JobSeeker(Integer job_seeker_id,String firstName, String lastName, String gender,Date DOB,String email) {
-        super(firstName, lastName, gender,DOB,email);
+    public JobSeeker(Integer job_seeker_id,String firstName, String lastName,String email) {
+        super(firstName, lastName,email);
         this.id=job_seeker_id;
     }
 
     //only for login
-    public JobSeeker(String firstName, String lastName, String gender,Date DOB,String email,String location,UserType userType, ArrayList<String> keySkills, ArrayList<String> languages, ArrayList<Employment> employments, ArrayList<Education> educations, ArrayList<Project> projects, String accompolishments) {
-        super(firstName, lastName, gender,DOB,email, location,userType);
+    public JobSeeker(String firstName, String lastName, String gender,Date DOB,String email,String location,String phone,UserType userType, ArrayList<String> keySkills, ArrayList<String> languages, ArrayList<Employment> employments, ArrayList<Education> educations, ArrayList<Project> projects, String accompolishments) {
+        super(firstName, lastName, gender,DOB,email, location,phone,userType);
         this.keySkills = keySkills;
         this.languages = languages;
         this.employments = employments;
@@ -40,6 +40,7 @@ public class JobSeeker extends User{
         this.id=App.id;
     }
     
+
     //this method is used for the scenario [job provider comes get list of applicants of job but he not check all job_seeker_extra profiles 
     //but check maybe one or two in that case 
     //we only load this extra profile if he select to view full details of particular applicant

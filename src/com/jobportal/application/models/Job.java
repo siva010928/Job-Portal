@@ -122,7 +122,7 @@ public class Job {
         ArrayList<Application> applications=new ArrayList<>();
 
         while(rApplications.next()){
-            JobSeeker jobSeeker=new JobSeeker(rApplications.getInt("job_seeker_id"),rApplications.getString("first_name"), rApplications.getString("last_name"), rApplications.getString("gender"),rApplications.getDate("DOB"),rApplications.getString("email"));
+            JobSeeker jobSeeker=new JobSeeker(rApplications.getInt("job_seeker_id"),rApplications.getString("first_name"), rApplications.getString("last_name"),rApplications.getString("email"));
             
             applications.add(new Application(rApplications.getInt("application_id"), jobSeeker, this, rApplications.getString("resume"), rApplications.getString("status"), rApplications.getTimestamp("appliedAt")));
         }
