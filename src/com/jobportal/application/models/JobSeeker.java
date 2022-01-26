@@ -225,6 +225,72 @@ public class JobSeeker extends User{
         
     }
 
+    public void addEducation(Education education) throws SQLException{
+        PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO educations VALUES(DEFAULT,?,?,?,?,?,?,?)");
+        stmt.setString(1, education.getEducation());
+        stmt.setString(2,education.getCourse());
+        stmt.setString(3, education.getInstitute());
+        stmt.setString(4, education.getCourseType());
+        stmt.setInt(5, education.getPassout());
+        stmt.setFloat(6, education.getGrade());
+        stmt.setInt(7, App.id);
+
+        int writtenResults=stmt.executeUpdate();
+        education.setId(App.getLastInsertId());
+        this.educations.add(education);
+    }
+
+    public void addEmployment(Employment employment) throws SQLException{
+        PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO employments VALUES(DEFAULT,?,?,?,?,?)");
+        stmt.setString(1, employment.getOrganization());
+        stmt.setString(2,employment.getDesignation());
+        stmt.setDate(3, employment.getStart());
+        if(employment.getEnd().equals(App.nullDate)){
+            stmt.setNull(4, java.sql.Types.DATE);//updating null to education db
+        }else{
+            stmt.setDate(4, employment.getEnd());
+        }
+        stmt.setInt(5, App.id);
+
+        int writtenResults=stmt.executeUpdate();
+        employment.setId(App.getLastInsertId());
+        this.employments.add(employment);
+    }
+
+    public void addProject(Project project) throws SQLException{
+        PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO projects VALUES(DEFAULT,?,?,?,?,?,?,?,?)");
+        stmt.setString(1, project.getTitle());
+        stmt.setString(2,project.getStatus());
+        stmt.setString(3, project.getClient());
+        stmt.setDate(4, project.getStart());
+        if(project.getEnd().equals(App.nullDate)){
+            stmt.setNull(5, java.sql.Types.DATE);//updating null to education db
+        }else{
+            stmt.setDate(5, project.getEnd());
+        }
+        stmt.setString(6, project.getLink());
+        stmt.setString(7, project.getDetail());
+        stmt.setInt(8, App.id);
+
+        int writtenResults=stmt.executeUpdate();
+        project.setId(App.getLastInsertId());
+        this.projects.add(project);
+    }
+
+
+    public void addLanguages(ArrayList<String> languages) throws SQLException{
+        PreparedStatement stmt;
+        for (String lang : languages) {
+            stmt=App.conn.prepareStatement("SELECT * FROM languages WHERE name=?");
+            stmt.setString(1, lang);
+            ResultSet rLang=stmt.executeQuery();
+            if(rLang.next()){
+                
+            }else{
+
+            }
+        }
+    }
 
     //getting my-Jobs menu for job seeker 
 

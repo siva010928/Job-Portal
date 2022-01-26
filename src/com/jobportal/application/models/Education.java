@@ -12,7 +12,7 @@ public class Education {
     private Float grade;
 
     public Education(Integer education_id,String education, String course, String institute, String courseType, Integer passout) {
-        this.id=id;
+        this.id=education_id;
         this.education = education;
         this.course = course;
         this.institute = institute;

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import com.jobportal.application.models.Education;
 import com.jobportal.application.models.User;
 public class App {
 

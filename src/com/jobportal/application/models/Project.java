@@ -110,5 +110,9 @@ public class Project {
     public void setEnd(Date end) {
         this.end = end;
     }
+
+    public void setId(int id) {
+        this.id=id;
+    }
 }
 
