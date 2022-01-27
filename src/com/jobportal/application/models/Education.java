@@ -30,7 +30,7 @@ public class Education {
         this.setGrade(education.getGrade());
 
         //then update this to  db
-        PreparedStatement stmt=App.conn.prepareStatement("UPDATE educations SET course=?,course_type=?,education?,institute=?passout=?,grade=? WHERE education_id=?");
+        PreparedStatement stmt=App.conn.prepareStatement("UPDATE educations SET course=?,course_type=?,education=?,institute=?,passout=?,grade=? WHERE education_id=?");
         stmt.setString(1, this.getCourse());
         stmt.setString(2, this.getCourseType());
         stmt.setString(3, this.getEducation());

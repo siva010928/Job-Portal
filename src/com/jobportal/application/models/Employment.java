@@ -32,7 +32,7 @@ public class Employment {
         this.setOrganization(employment.getOrganization());
 
         //then update this to  db
-        PreparedStatement stmt=App.conn.prepareStatement("UPDATE employments SET start=?,end=?,designation?,organization=?passout=?,grade=? WHERE employment_id=?");
+        PreparedStatement stmt=App.conn.prepareStatement("UPDATE employments SET start=?,end=?,designation=?,organization=? WHERE employment_id=?");
         stmt.setDate(1, this.getStart());
 
         //if job seeker does not fill end date in this education in edit education then set null in databse
@@ -45,6 +45,7 @@ public class Employment {
         }
         stmt.setString(3, this.getDesignation());
         stmt.setString(4, this.getOrganization());
+        stmt.setInt(5, this.getId());
 
         int updatedResults=stmt.executeUpdate();
     }

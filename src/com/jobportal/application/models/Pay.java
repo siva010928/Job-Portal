@@ -29,6 +29,15 @@ public class Pay {
         int last_pay_id=App.getLastInsertId();
         return last_pay_id;
     }
+
+    public void updatePay() throws SQLException{
+        PreparedStatement stmt=App.conn.prepareStatement("UPDATE PAYS  SET from=?,to=?,pay_type=? WHERE pay_id=?");
+        stmt.setBigDecimal(1, this.getFrom());
+        stmt.setBigDecimal(2, this.getTo());
+        stmt.setString(3, this.getPayType());
+        stmt.setInt(4, this.getId());
+        int rowsAffected=stmt.executeUpdate();
+    }
     
 
     public Integer getId() {

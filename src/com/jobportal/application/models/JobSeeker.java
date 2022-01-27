@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -278,21 +279,67 @@ public class JobSeeker extends User{
     }
 
 
-    public void addLanguages(ArrayList<String> languages) throws SQLException{
-        PreparedStatement stmt;
-        for (String lang : languages) {
-            stmt=App.conn.prepareStatement("SELECT * FROM languages WHERE name=?");
-            stmt.setString(1, lang);
-            ResultSet rLang=stmt.executeQuery();
-            if(rLang.next()){
-                
-            }else{
 
-            }
+    public ArrayList<ArrayList<String>> searchLanguages(String search) throws SQLException{
+        ArrayList<ArrayList<String>> searchedResults=new ArrayList<>();
+
+        PreparedStatement stmt=App.conn.prepareStatement("SELECT *  FROM languages WHERE name LIKE '?%' ORDER BY name");
+        stmt.setString(1, search);
+        ResultSet Rsearches=stmt.executeQuery();
+        while(Rsearches.next()){
+            searchedResults.add(new ArrayList<>(Arrays.asList(Rsearches.getInt("language_id")+"",Rsearches.getString("name"))));
         }
+        return searchedResults;
     }
 
-    //getting my-Jobs menu for job seeker 
+    public void addLanguage(Integer language_id) throws SQLException{
+        PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO seeker_languages VALUES(?,?)");
+        stmt.setInt(1, language_id);
+        stmt.setInt(2, App.id);
+        int writtenResults=stmt.executeUpdate();
+    }
+
+    public void removeLanguage(Integer language_id) throws SQLException{
+        PreparedStatement stmt=App.conn.prepareStatement("DELETE FROM seeker_languages WHERE language_id=? AND job_seeker_id=?");
+        stmt.setInt(1, language_id);
+        stmt.setInt(2, App.id);
+        int deleteResults=stmt.executeUpdate();
+    }
+
+    public ArrayList<ArrayList<String>> searchSkills(String search) throws SQLException{
+        ArrayList<ArrayList<String>> searchedResults=new ArrayList<>();
+
+        PreparedStatement stmt=App.conn.prepareStatement("SELECT *  FROM key_skills WHERE name LIKE '%?%' ORDER BY name");
+        stmt.setString(1, search);
+        ResultSet Rsearches=stmt.executeQuery();
+        while(Rsearches.next()){
+            searchedResults.add(new ArrayList<>(Arrays.asList(Rsearches.getInt("key_skill_id")+"",Rsearches.getString("name"))));
+        }
+        return searchedResults;
+    }
+
+    public void addSkill(Integer keySkillId) throws SQLException{
+        PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO seeker_skills VALUES(?,?)");
+        stmt.setInt(1, keySkillId);
+        stmt.setInt(2, App.id);
+        int writtenResults=stmt.executeUpdate();
+    }
+
+    public void removeSkill(Integer keySkillId) throws SQLException{
+        PreparedStatement stmt=App.conn.prepareStatement("DELETE FROM seeker_skills WHERE key_skill_id=? AND job_seeker_id=?");
+        stmt.setInt(1, keySkillId);
+        stmt.setInt(2, App.id);
+        int deleteResults=stmt.executeUpdate();
+    }
+
+    public void updateAccomplishments(String accompolishments) throws SQLException{
+        this.setAccompolishments(accompolishments);
+        PreparedStatement stmt=App.conn.prepareStatement("UPDATE job_seekers SET accomplishments=? WHERE job_seeker_id=?");
+        stmt.setString(1, accompolishments);
+        stmt.setInt(1, this.id);
+        int updateResults=stmt.executeUpdate();
+    }
+
 
     public Integer getId(){
         return this.id;
