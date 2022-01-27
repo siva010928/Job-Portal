@@ -223,6 +223,14 @@ public class Job {
         return this.questionsStrings=questionsStrings;
     }
 
+    public void updateJobStatus(String status) throws SQLException{
+        this.setJobStatus(status);
+        PreparedStatement stmt=App.conn.prepareStatement("UPDATE jobs SET job_status=? WHERE job_id=?");
+        stmt.setString(1, this.getJobStatus());
+        stmt.setInt(1,this.getId());
+        int updateResults=stmt.executeUpdate();
+    }
+
     public Integer getId() {
         return this.id;
     }

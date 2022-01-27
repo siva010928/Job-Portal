@@ -27,6 +27,31 @@ public class Company {
         this.revenue = revenue;
     }
 
+    public void updateCompany(Company company) throws SQLException{
+        this.setFounded(company.getFounded());
+        this.setIndustry(company.getIndustry());
+        this.setLocation(company.getLocation());
+        this.setLogo(company.getLogo());
+        this.setName(company.getName());
+        this.setRevenue(company.getRevenue());
+        this.setSector(company.getSector());
+        this.setSize(company.getSize());
+
+        //then update this to  db
+        PreparedStatement stmt=App.conn.prepareStatement("UPDATE companies SET name=?,logo=?,sector=?,industry=?,size=?,founded=?,location=? WHERE company_id=?");
+        stmt.setString(1,this.getName());
+        stmt.setString(2, this.getLogo());
+        stmt.setString(3, this.getSector());
+        stmt.setString(4, this.getIndustry());
+        stmt.setInt(5, this.getSize());
+        stmt.setInt(6, this.getFounded());
+        stmt.setString(7, this.getLocation());
+        stmt.setInt(8, this.getId());
+        int updatedResults=stmt.executeUpdate();
+
+        this.getRevenue().updatePay();
+    }
+
 
     public Integer getId() {
         return this.id;
@@ -116,29 +141,5 @@ public class Company {
         this.revenue = revenue;
     }
 
-    public void updateCompany(Company company) throws SQLException{
-        this.setFounded(company.getFounded());
-        this.setIndustry(company.getIndustry());
-        this.setLocation(company.getLocation());
-        this.setLogo(company.getLogo());
-        this.setName(company.getName());
-        this.setRevenue(company.getRevenue());
-        this.setSector(company.getSector());
-        this.setSize(company.getSize());
-
-        //then update this to  db
-        PreparedStatement stmt=App.conn.prepareStatement("UPDATE companies SET name=?,logo=?,sector=?,industry=?,size=?,founded=?,location=? WHERE company_id=?");
-        stmt.setString(1,this.getName());
-        stmt.setString(2, this.getLogo());
-        stmt.setString(3, this.getSector());
-        stmt.setString(4, this.getIndustry());
-        stmt.setInt(5, this.getSize());
-        stmt.setInt(6, this.getFounded());
-        stmt.setString(7, this.getLocation());
-        stmt.setInt(8, this.getId());
-        int updatedResults=stmt.executeUpdate();
-
-        this.getRevenue().updatePay();
-    }
-    
+        
 }

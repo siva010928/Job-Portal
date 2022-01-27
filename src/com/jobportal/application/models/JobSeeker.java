@@ -124,7 +124,7 @@ public class JobSeeker extends User{
     //Jobs Feed  job seeker optional Filter
     @Override
     public ArrayList<Job> getJobsFeed(HashMap<String,String> searchFilter,HashMap<String,Integer> sortFilter,Integer daysFilter,Integer salaryFilter) throws SQLException{
-        StringBuilder query=new StringBuilder("SELECT * FROM jobs JOIN pays USING(pay_id) JOIN companies USING(company_id) WHERE 1=1");
+        StringBuilder query=new StringBuilder("SELECT * FROM jobs JOIN pays USING(pay_id) JOIN companies USING(company_id) WHERE job_status='open'");
         
 
         //filtering by salary

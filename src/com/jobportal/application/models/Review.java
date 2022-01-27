@@ -4,12 +4,26 @@ package com.jobportal.application.models;
 import java.time.LocalDateTime;
 
 public class Review {
+    private Integer id;
     private JobSeeker user;
     private Company company;
     private LocalDateTime reviewedAt;
     private String review,pros,cons,jobTitle,jobStatus,location;
 
-    public Review(JobSeeker user, Company company, LocalDateTime reviewedAt, String review, String pros, String cons, String jobTitle, String jobStatus, String location) {
+    //posting a review
+    public Review(JobSeeker user, Company company, String review, String pros, String cons, String jobTitle, String jobStatus, String location) {
+        this.user = user;
+        this.company = company;
+        this.review = review;
+        this.pros = pros;
+        this.cons = cons;
+        this.jobTitle = jobTitle;
+        this.jobStatus = jobStatus;
+        this.location = location;
+    }
+
+    public Review(Integer id,JobSeeker user, Company company, LocalDateTime reviewedAt, String review, String pros, String cons, String jobTitle, String jobStatus, String location) {
+        this.id=id;
         this.user = user;
         this.company = company;
         this.reviewedAt = reviewedAt;
@@ -21,8 +35,17 @@ public class Review {
         this.location = location;
     }
 
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public JobSeeker getUser() {
-        return user;
+        return this.user;
     }
 
     public void setUser(JobSeeker user) {
@@ -30,7 +53,7 @@ public class Review {
     }
 
     public Company getCompany() {
-        return company;
+        return this.company;
     }
 
     public void setCompany(Company company) {
@@ -38,7 +61,7 @@ public class Review {
     }
 
     public LocalDateTime getReviewedAt() {
-        return reviewedAt;
+        return this.reviewedAt;
     }
 
     public void setReviewedAt(LocalDateTime reviewedAt) {
@@ -46,7 +69,7 @@ public class Review {
     }
 
     public String getReview() {
-        return review;
+        return this.review;
     }
 
     public void setReview(String review) {
@@ -54,7 +77,7 @@ public class Review {
     }
 
     public String getPros() {
-        return pros;
+        return this.pros;
     }
 
     public void setPros(String pros) {
@@ -62,7 +85,7 @@ public class Review {
     }
 
     public String getCons() {
-        return cons;
+        return this.cons;
     }
 
     public void setCons(String cons) {
@@ -70,7 +93,7 @@ public class Review {
     }
 
     public String getJobTitle() {
-        return jobTitle;
+        return this.jobTitle;
     }
 
     public void setJobTitle(String jobTitle) {
@@ -78,7 +101,7 @@ public class Review {
     }
 
     public String getJobStatus() {
-        return jobStatus;
+        return this.jobStatus;
     }
 
     public void setJobStatus(String jobStatus) {
@@ -86,11 +109,12 @@ public class Review {
     }
 
     public String getLocation() {
-        return location;
+        return this.location;
     }
 
     public void setLocation(String location) {
         this.location = location;
     }
+   
 }
 

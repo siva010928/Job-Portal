@@ -87,7 +87,7 @@ public class JobProvider extends  User{
             query.append("postedAt>(DATE_SUB(CURRENT_DATE,INTERVAL "+daysFilter+" DAY))");
         }
 
-        //filtering for where class of job title,location
+        //filtering for where class of job title,location,company_name
         for (Map.Entry<String,String> m : searchFilter.entrySet()) {
             query.append(" AND ");
             query.append(m.getKey());
@@ -201,7 +201,14 @@ public class JobProvider extends  User{
     //update their additional profile
     @Override
     public void updateProfile() throws SQLException {
-        
+    }
+
+    public void updateDesignation(String designation) throws SQLException{
+        this.setDesignation(designation);
+        PreparedStatement stmt=App.conn.prepareStatement("UPDATE job_providers SET designation=? WHERE job_provider_id=?");
+        stmt.setString(1, this.designation);
+        stmt.setInt(1,App.id);
+        int updateResults=stmt.executeUpdate();
     }
 
     public String getDesignation() {
