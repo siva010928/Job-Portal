@@ -26,45 +26,75 @@ public class JobProvider extends  User{
     //post a job from this provider
     public void postJob(Job jobDetails,BigDecimal minSalary,BigDecimal maxSalary) throws SQLException{
         Pay salaryPay=new Pay(-1,minSalary, maxSalary, "MONTHLY");
-        //inserting salary int pays db and getting it's id 
-        Integer last_pay_id=salaryPay.addPayToDb();
 
-        //inserting job
-        PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO jobs('title','description','location_type','location','fullOrPartTime','openings','job_provider_id','company_id','pay_id') VALUES(?,?,?,?,?,?,?,?)");
-        stmt.setString(1, jobDetails.getJobTitle());
-        stmt.setString(2, jobDetails.getJobDescription());
-        stmt.setString(3, jobDetails.getLocationType());
-        stmt.setString(4, jobDetails.getLocation());
-        stmt.setString(5, jobDetails.getFullOrPartTime());
-        stmt.setInt(6, jobDetails.getOpenings());
-        stmt.setInt(7, App.id);
-        stmt.setInt(8, this.company.getId());
-        stmt.setInt(9, last_pay_id);
+        try{
+            App.conn.setAutoCommit(false);
+            //inserting salary int pays db and getting it's id 
+            Integer last_pay_id=salaryPay.addPayToDb();
 
-        //getting the last inserted job_id        
-        int last_job_id=App.getLastInsertId();
 
-        //inserting job_schedules
-        for (Integer job_schedule_id : jobDetails.getJobSchedulesIds()) {
-            stmt=App.conn.prepareStatement("INSERT INTO job_job_schedules VALUES(?,?)");
-            stmt.setInt(1, last_job_id);
-            stmt.setInt(2, job_schedule_id);
+            //inserting job
+            PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO jobs('title','description','location_type','location','fullOrPartTime','openings','job_provider_id','company_id','pay_id') VALUES(?,?,?,?,?,?,?,?)");
+            stmt.setString(1, jobDetails.getJobTitle());
+            stmt.setString(2, jobDetails.getJobDescription());
+            stmt.setString(3, jobDetails.getLocationType());
+            stmt.setString(4, jobDetails.getLocation());
+            stmt.setString(5, jobDetails.getFullOrPartTime());
+            stmt.setInt(6, jobDetails.getOpenings());
+            stmt.setInt(7, App.id);
+            stmt.setInt(8, this.company.getId());
+            stmt.setInt(9, last_pay_id);
+            int writtenResults=stmt.executeUpdate();
+
+            //getting the last inserted job_id        
+            int last_job_id=App.getLastInsertId();
+
+            //inserting job_schedules
+            for (Integer job_schedule_id : jobDetails.getJobSchedulesIds()) {
+                stmt=App.conn.prepareStatement("INSERT INTO job_job_schedules VALUES(?,?)");
+                stmt.setInt(1, last_job_id);
+                stmt.setInt(2, job_schedule_id);
+                writtenResults=stmt.executeUpdate();
+            }
+
+            //inserting job_types
+            for (Integer job_type_id : jobDetails.getJobTypesIds()) {
+                stmt=App.conn.prepareStatement("INSERT INTO job_job_types VALUES(?,?)");
+                stmt.setInt(1, last_job_id);
+                stmt.setInt(2, job_type_id);
+                writtenResults=stmt.executeUpdate();
+            }
+
+
+            //inserting questions into db
+            for (String question : jobDetails.generateQuestionsAsStrings()) {
+                stmt=App.conn.prepareStatement("INSERT INTO questions(question,job_id) VALUES(?,?)");
+                stmt.setString(1, question);
+                stmt.setInt(2, last_job_id);
+                writtenResults=stmt.executeUpdate();
+            }
+            App.conn.setAutoCommit(true);
         }
+        catch(SQLException e){
+            e.printStackTrace();
+            try {
+                System.err.println("Transaction rolled back at post_job(jobprovider)"+e.getMessage());
+                App.conn.rollback();
+                
+            } catch (SQLException e1) {
+                e1.printStackTrace();
 
-        //inserting job_types
-        for (Integer job_type_id : jobDetails.getJobTypesIds()) {
-            stmt=App.conn.prepareStatement("INSERT INTO job_job_types VALUES(?,?)");
-            stmt.setInt(1, last_job_id);
-            stmt.setInt(2, job_type_id);
+            }
         }
-
-
-        //inserting questions into db
-        for (String question : jobDetails.generateQuestionsAsStrings()) {
-            stmt=App.conn.prepareStatement("INSERT INTO questions(question,job_id) VALUES(?,?)");
-            stmt.setString(1, question);
-            stmt.setInt(2, last_job_id);
-        }
+        finally{
+            try {
+                App.conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }  
+        
         
     }
 
