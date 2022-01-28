@@ -1,19 +1,17 @@
 package com.jobportal.application.models;
 
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 public class Review {
     private Integer id;
-    private JobSeeker user;
-    private Company company;
     private LocalDateTime reviewedAt;
     private String review,pros,cons,jobTitle,jobStatus,location;
 
     //posting a review
-    public Review(JobSeeker user, Company company, String review, String pros, String cons, String jobTitle, String jobStatus, String location) {
-        this.user = user;
-        this.company = company;
+    public Review(String review, String pros, String cons, String jobTitle, String jobStatus, String location) {
         this.review = review;
         this.pros = pros;
         this.cons = cons;
@@ -22,11 +20,11 @@ public class Review {
         this.location = location;
     }
 
-    public Review(Integer id,JobSeeker user, Company company, LocalDateTime reviewedAt, String review, String pros, String cons, String jobTitle, String jobStatus, String location) {
+    public Review(Integer id,Timestamp reviewedAt, String review, String pros, String cons, String jobTitle, String jobStatus, String location) {
         this.id=id;
-        this.user = user;
-        this.company = company;
-        this.reviewedAt = reviewedAt;
+        //timestamp.toInstant().atZone(zoneId).toLocalDate()
+        //ZoneOffset.UTC
+        this.reviewedAt = reviewedAt.toInstant().atZone(ZoneOffset.UTC).toLocalDateTime();
         this.review = review;
         this.pros = pros;
         this.cons = cons;
