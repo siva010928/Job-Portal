@@ -340,6 +340,43 @@ public class JobSeeker extends User{
         int updateResults=stmt.executeUpdate();
     }
 
+    //getMyReviews(jobseeker)(default postedAt descending)
+    public ArrayList<Review> getMyReviews(HashMap<String,Integer> sortFilter,Integer daysFilter) throws SQLException{
+        //for default showing date will be in descending order(modified first)
+        sortFilter.put("reviewedAt", -1);
+
+
+        StringBuilder query=new StringBuilder("SELECT * FROM reviews JOIN companies USING(company_id) WHERE job_seeker_id=?");
+
+        //filterring last 7 days like
+        if(daysFilter!=-1){
+            query.append(" AND ");
+            query.append("reviewedAt>(DATE_SUB(CURRENT_DATE,INTERVAL "+daysFilter+" DAY))");
+        }
+
+        //filtering for order by ratings it will be always the size of one
+        if(!sortFilter.isEmpty()){
+            query.append(" ORDER BY ");
+            for(Map.Entry<String,Integer> m:sortFilter.entrySet()){
+                query.append(m.getKey());
+                query.append(m.getValue()==1?" ASC":" DESC");
+                query.append(",");
+            }
+            query.deleteCharAt(query.length()-1);   
+        }
+
+        PreparedStatement stmt=App.conn.prepareStatement(query.toString());
+        
+        stmt.setInt(1,App.id);//job_seeker_id
+        ArrayList<Review> reviews=new ArrayList<>();
+        ResultSet rS=stmt.executeQuery();
+        while(rS.next()){
+
+            reviews.add(new Review(rS.getInt("review_id"),rS.getTimestamp("reviewedAt"),rS.getString("review"), rS.getString("pros"), rS.getString("cons"), rS.getString("job_title"), rS.getString("job_status"), rS.getString("location")));
+
+        }
+        return reviews;
+    }
 
     public Integer getId(){
         return this.id;
