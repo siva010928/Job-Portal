@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `job_portal`.`users` (
   `first_name` VARCHAR(255) NOT NULL,
   `last_name` VARCHAR(255) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
-  `password` VARCHAR(64) NULL,
+  `password` VARCHAR(128) NULL,
   `location` VARCHAR(255) NULL,
   `gender` VARCHAR(6) NULL,
   `DOB` DATE NULL,

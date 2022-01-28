@@ -2,6 +2,8 @@ package com.jobportal.application.models;
 
 import com.jobportal.application.*;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
+
 import java.lang.System.Logger;
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -43,13 +45,14 @@ public abstract class User {
     public static int login(String email,String password) throws SQLException{
         PreparedStatement stmt=App.conn.prepareStatement("SELECT * FROM users JOIN user_types USING(user_type_id) WHERE email=? ");
         stmt.setString(1, email);
-        //hash password
+        //hash password  
 
         ResultSet rS=stmt.executeQuery();
         if(rS.isBeforeFirst()){
             rS.next();
             String retrievedPassword=rS.getString("password");
-            if(password.equals(retrievedPassword)){
+            BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), retrievedPassword);
+            if(result.verified){
                 App.user_id=rS.getInt("user_id");
                 String category=rS.getString("category");
                 if(category==UserType.JOB_SEEKER.toString()){
@@ -86,7 +89,7 @@ public abstract class User {
 
                     Pay revenue=new Pay(rS.getInt("pay_id"),rS.getBigDecimal("from"), rS.getBigDecimal("to"), rS.getString("pay_type"));
                     Company company=new Company(company_id,rCompany.getInt("reviews"), rCompany.getInt("ratings"), rS.getInt("founded"), rS.getInt("size"), rS.getString("name"), rS.getString("logo"), rS.getString("sector"), rS.getString("industry"), rS.getString("location"), revenue);
-
+                    
                     App.logginUser=new JobProvider(UserType.JOB_PROVIDER,rS.getString("first_name"), rS.getString("last_name"), rS.getString("gender"),rS.getDate("DOB"),email,rS.getString("location"), rS.getString("phone"),rSprovider.getString("designation"), company);
                 }
             }
@@ -102,6 +105,7 @@ public abstract class User {
 
     public int signUp(User user,String password,String companyName,String designation,String companyLocation){
 
+        String hashedPassword = BCrypt.withDefaults().hashToString(12, password.toCharArray());     
         int company_id=-1;
         PreparedStatement stmt;
         if(designation!=null){
@@ -129,7 +133,7 @@ public abstract class User {
             stmt.setString(1, user.getFirstName());
             stmt.setString(2, user.getLastName());
             stmt.setString(3, user.getEmail());
-            stmt.setString(4, password);
+            stmt.setString(4, hashedPassword);
             stmt.setString(5, user.getLocation());
             stmt.setString(6, user.getGender());
             stmt.setDate(7, user.getDOB());

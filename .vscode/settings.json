@@ -3,6 +3,7 @@
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "/home/sivaprakash/mysql-connector-java-8.0.27/mysql-connector-java-8.0.27.jar"
+        "/home/sivaprakash/mysql-connector-java-8.0.27/mysql-connector-java-8.0.27.jar",
+        "/home/sivaprakash/Downloads/bcrypt-0.9.0.jar"
     ]
 }
