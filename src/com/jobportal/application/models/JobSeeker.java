@@ -226,6 +226,37 @@ public class JobSeeker extends User{
         
     }
 
+    public ArrayList<Application> getMyApplications(HashMap<String,String> searchFilter,Integer daysFilter) throws SQLException {
+        StringBuilder query=new StringBuilder("SELECT * FROM Applications JOIN job USING(job_id) JOIN companies USING(company_id) WHERE job_seeker_id="+App.id);
+        
+        // filtering like last 7 days
+        if(daysFilter!=-1){
+            query.append(" AND ");
+            query.append("postedAt>(DATE_SUB(CURRENT_DATE,INTERVAL "+daysFilter+" DAY))");
+        }
+
+        // filter applications based on its status
+        for (Map.Entry<String,String> m : searchFilter.entrySet()) {
+            query.append(" AND ");
+            query.append(m.getKey());//field name
+            query.append("LIKE");
+            query.append("%"+m.getValue()+"%");//field value
+        }
+
+        query.append(" ORDER BY posted_date DESC");
+
+        PreparedStatement stmt=App.conn.prepareStatement(query.toString());
+        ResultSet rS=stmt.executeQuery();
+        ArrayList<Application> applications = new ArrayList<>();
+        while(rS.next()){
+            Company company = new Company(rS.getInt("company_id"),rS.getInt("reviews"), rS.getInt("ratings"), rS.getInt("founded"), rS.getInt("size"), rS.getString("name"), rS.getString("logo"), rS.getString("sector"), rS.getString("industry"), rS.getString("location"), null);
+            Job job = new Job(rS.getInt("job_id"),rS.getInt("openings"),rS.getString("title"), rS.getString("description"), rS.getString("location_type"), rS.getString("location"), rS.getString("fullOrPartTime"), rS.getString("job_status"), rS.getString("candidate_profile"), rS.getString("education_level"), null, rS.getTimestamp("postedAt"), null, null,company);
+            applications.add(new Application(rS.getInt("application_id"),null,job,rS.getString("resume"), rS.getString("status"), rS.getTimestamp("appliedAt")));
+        }
+        return applications;
+
+    }
+
     public void addEducation(Education education) throws SQLException{
         PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO educations VALUES(DEFAULT,?,?,?,?,?,?,?)");
         stmt.setString(1, education.getEducation());
@@ -376,6 +407,27 @@ public class JobSeeker extends User{
 
         }
         return reviews;
+    }
+
+    public void deleteEducation(Education education) throws SQLException {
+        PreparedStatement stmt=App.conn.prepareStatement("DELETE FROM educations WHERE education_id=?");
+        stmt.setInt(1, education.getId());
+        int deletedRows=stmt.executeUpdate();
+        this.educations.remove(education);
+    }
+
+    public void deleteEmployment(Employment employment) throws SQLException {
+        PreparedStatement stmt=App.conn.prepareStatement("DELETE FROM employments WHERE employment_id=?");
+        stmt.setInt(1, employment.getId());
+        int deletedRows=stmt.executeUpdate();
+        this.employments.remove(employment);
+    }
+
+    public void deleteProject(Project project) throws SQLException {
+        PreparedStatement stmt=App.conn.prepareStatement("DELETE FROM projects WHERE project_id=?");
+        stmt.setInt(1, project.getId());
+        int deletedRows=stmt.executeUpdate();
+        this.projects.remove(project);
     }
 
     public Integer getId(){

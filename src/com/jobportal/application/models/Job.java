@@ -1,6 +1,7 @@
 package com.jobportal.application.models;
 
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -178,6 +179,29 @@ public class Job {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void updateJob(Job jobDetails, BigDecimal minSalary,BigDecimal maxSalary,String payType) throws SQLException{
+        Pay salaryPay = new Pay(jobDetails.getPay().getId(),minSalary,maxSalary,payType);
+        salaryPay.updatePay();
+
+        this.setJobTitle(jobDetails.getJobTitle());
+        this.setJobDescription(jobDetails.getJobDescription());
+        this.setLocationType(jobDetails.getLocationType());
+        this.setLocation(jobDetails.getLocation());
+        this.setFullOrPartTime(jobDetails.getFullOrPartTime());
+        this.setOpenings(jobDetails.getOpenings());
+
+        PreparedStatement stmt=App.conn.prepareStatement("UPDATE jobs SET title=?,description=?,location_type=?,location=?,fullOrPartTime=?,openings=? WHERE job_id=?");
+        stmt.setString(1, jobDetails.getJobTitle());
+        stmt.setString(2, jobDetails.getJobDescription());
+        stmt.setString(3, jobDetails.getLocationType());
+        stmt.setString(4, jobDetails.getLocation());
+        stmt.setString(5, jobDetails.getFullOrPartTime());
+        stmt.setInt(6, jobDetails.getOpenings());
+        stmt.setInt(7, jobDetails.getId());
+        int updatedResults=stmt.executeUpdate();
+        
     }
 
     public void generateQuestions() throws SQLException{
