@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS `job_portal`.`users` (
   `DOB` DATE NULL,
   `createdAt` DATETIME NULL DEFAULT NOW(),
   `user_type_id` INT NOT NULL,
+  `phone` VARCHAR(12) NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC) VISIBLE,
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
@@ -55,8 +56,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `job_portal`.`pays` (
   `pay_id` INT NOT NULL AUTO_INCREMENT,
-  `from` DECIMAL(19,2) NULL,
-  `to` DECIMAL(19,2) NULL,
+  `from` DECIMAL(19,2) NULL DEFAULT 0,
+  `to` DECIMAL(19,2) NULL DEFAULT 0,
   `pay_type` VARCHAR(45) NULL,
   PRIMARY KEY (`pay_id`))
 ENGINE = InnoDB;
@@ -144,7 +145,6 @@ CREATE TABLE IF NOT EXISTS `job_portal`.`employments` (
   `organization` VARCHAR(255) NULL,
   `designation` VARCHAR(255) NULL,
   `start_date` DATE NULL,
-  `stillWorking` TINYINT NULL,
   `end_date` DATE NULL DEFAULT NULL,
   `job_seeker_id` INT NOT NULL,
   PRIMARY KEY (`employment_id`),
@@ -173,7 +173,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `job_portal`.`educations` (
   `education_id` INT NOT NULL AUTO_INCREMENT,
   `education_level` VARCHAR(25) NULL,
-  `specialization` VARCHAR(128) NULL,
+  `course` VARCHAR(128) NULL,
   `institution` VARCHAR(255) NULL,
   `course_type` VARCHAR(25) NULL,
   `passout` INT NULL,
@@ -346,10 +346,11 @@ CREATE TABLE IF NOT EXISTS `job_portal`.`reviews` (
   `job_title` VARCHAR(255) NULL,
   `ratings` INT NULL,
   `job_status` VARCHAR(45) NULL,
-  `city` VARCHAR(255) NULL,
+  `location` VARCHAR(255) NULL,
   `review` TEXT(65535) NULL,
   `pros` TEXT(65535) NULL,
   `cons` TEXT(65535) NULL,
+  `reviewedAt` DATETIME NULL DEFAULT NOW(),
   `job_seeker_id` INT NOT NULL,
   `company_id` INT NOT NULL,
   PRIMARY KEY (`review_id`, `company_id`),

@@ -20,14 +20,19 @@ public class Pay {
         this.payType = payType;
     }
 
-    public Integer addPayToDb() throws SQLException{
-        PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO PAYS VALUES(?,?,?)");
-        stmt.setBigDecimal(1, this.from);
-        stmt.setBigDecimal(2, this.to);
-        stmt.setString(3, this.payType);
-        int rowsAffected=stmt.executeUpdate();
-        int last_pay_id=App.getLastInsertId();
-        return last_pay_id;
+    public Integer addPayToDb() throws SQLException {
+        try{
+            PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO PAYS VALUES(?,?,?)");
+            stmt.setBigDecimal(1, this.from);
+            stmt.setBigDecimal(2, this.to);
+            stmt.setString(3, this.payType);
+            int rowsAffected=stmt.executeUpdate();
+            int last_pay_id=App.getLastInsertId();
+            return last_pay_id;
+        }catch(SQLException e){
+            throw e;
+        }
+        
     }
 
     public void updatePay() throws SQLException{

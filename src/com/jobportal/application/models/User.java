@@ -3,6 +3,7 @@ package com.jobportal.application.models;
 import com.jobportal.application.*;
 
 import java.lang.System.Logger;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -148,9 +149,14 @@ public abstract class User {
                 stmt.close();
 
                 if(company_id!=-1){//create new company
-                    stmt=App.conn.prepareStatement("INSERT INTO companies(name,location) VALUES(?,?)");
+
+                    Pay pay=new Pay(-1, new BigDecimal(0), new BigDecimal(0), "ANNUALLY");
+                    Integer revenue_id=pay.addPayToDb();
+
+                    stmt=App.conn.prepareStatement("INSERT INTO companies(name,location,revenue_id) VALUES(?,?,?)");
                     stmt.setString(1, companyName);
                     stmt.setString(2, location);
+                    stmt.setInt(3, revenue_id);
                     rowsAffected=stmt.executeUpdate();
                     company_id=App.getLastInsertId();
 
