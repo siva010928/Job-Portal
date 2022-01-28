@@ -15,7 +15,8 @@ public class Review {
     private String review,pros,cons,jobTitle,jobStatus,location;
 
     //posting a review
-    public Review(String review, String pros, String cons, String jobTitle, String jobStatus, String location) {
+    public Review(Integer ratings,String review, String pros, String cons, String jobTitle, String jobStatus, String location) {
+        this.ratings=ratings;
         this.review = review;
         this.pros = pros;
         this.cons = cons;
@@ -24,8 +25,9 @@ public class Review {
         this.location = location;
     }
 
-    public Review(Integer id,Timestamp reviewedAt, String review, String pros, String cons, String jobTitle, String jobStatus, String location) {
+    public Review(Integer id,Timestamp reviewedAt,Integer ratings,String review, String pros, String cons, String jobTitle, String jobStatus, String location) {
         this.id=id;
+        this.ratings=ratings;
         //timestamp.toInstant().atZone(zoneId).toLocalDate()
         //ZoneOffset.UTC
         this.reviewedAt = reviewedAt.toInstant().atZone(ZoneOffset.UTC).toLocalDateTime();

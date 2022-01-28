@@ -36,7 +36,7 @@ public class Project {
         this.setDetail(project.getDetail());
         this.setStart(project.getStart());
 
-        PreparedStatement stmt=App.conn.prepareStatement("UPDATE projects SET start=?,end=?,title?,client=?status=?,link=?,details=? WHERE project_id=?");
+        PreparedStatement stmt=App.conn.prepareStatement("UPDATE projects SET start=?,end=?,title=?,client=?status=?,link=?,details=? WHERE project_id=?");
         stmt.setDate(1, this.getStart());
         //if job seeker does not fill end date in this project in edit education then set null in databse
         if(this.getEnd().equals(App.nullDate)){

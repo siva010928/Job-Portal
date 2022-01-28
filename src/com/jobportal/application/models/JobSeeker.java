@@ -227,12 +227,12 @@ public class JobSeeker extends User{
     }
 
     public ArrayList<Application> getMyApplications(HashMap<String,String> searchFilter,Integer daysFilter) throws SQLException {
-        StringBuilder query=new StringBuilder("SELECT * FROM Applications JOIN job USING(job_id) JOIN companies USING(company_id) WHERE job_seeker_id="+App.id);
+        StringBuilder query=new StringBuilder("SELECT * FROM Applications JOIN job USING(job_id) JOIN companies USING(company_id) WHERE job_seeker_id=?");
         
         // filtering like last 7 days
         if(daysFilter!=-1){
             query.append(" AND ");
-            query.append("postedAt>(DATE_SUB(CURRENT_DATE,INTERVAL "+daysFilter+" DAY))");
+            query.append("appliedAt>(DATE_SUB(CURRENT_DATE,INTERVAL "+daysFilter+" DAY))");
         }
 
         // filter applications based on its status
@@ -243,15 +243,16 @@ public class JobSeeker extends User{
             query.append("%"+m.getValue()+"%");//field value
         }
 
-        query.append(" ORDER BY posted_date DESC");
+        query.append(" ORDER BY appliedAt DESC");
 
         PreparedStatement stmt=App.conn.prepareStatement(query.toString());
+        stmt.setInt(1, App.id);
         ResultSet rS=stmt.executeQuery();
         ArrayList<Application> applications = new ArrayList<>();
         while(rS.next()){
-            Company company = new Company(rS.getInt("company_id"),rS.getInt("reviews"), rS.getInt("ratings"), rS.getInt("founded"), rS.getInt("size"), rS.getString("name"), rS.getString("logo"), rS.getString("sector"), rS.getString("industry"), rS.getString("location"), null);
+            Company company = new Company(rS.getInt("company_id"),null, null, rS.getInt("founded"), rS.getInt("size"), rS.getString("name"), rS.getString("logo"), rS.getString("sector"), rS.getString("industry"), rS.getString("location"), null);
             Job job = new Job(rS.getInt("job_id"),rS.getInt("openings"),rS.getString("title"), rS.getString("description"), rS.getString("location_type"), rS.getString("location"), rS.getString("fullOrPartTime"), rS.getString("job_status"), rS.getString("candidate_profile"), rS.getString("education_level"), null, rS.getTimestamp("postedAt"), null, null,company);
-            applications.add(new Application(rS.getInt("application_id"),null,job,rS.getString("resume"), rS.getString("status"), rS.getTimestamp("appliedAt")));
+            applications.add(new Application(rS.getInt("application_id"),this,job,rS.getString("resume"), rS.getString("status"), rS.getTimestamp("appliedAt")));
         }
         return applications;
 
@@ -403,7 +404,7 @@ public class JobSeeker extends User{
         ResultSet rS=stmt.executeQuery();
         while(rS.next()){
 
-            reviews.add(new Review(rS.getInt("review_id"),rS.getTimestamp("reviewedAt"),rS.getString("review"), rS.getString("pros"), rS.getString("cons"), rS.getString("job_title"), rS.getString("job_status"), rS.getString("location")));
+            reviews.add(new Review(rS.getInt("review_id"),rS.getTimestamp("reviewedAt"),rS.getInt("ratings"),rS.getString("review"), rS.getString("pros"), rS.getString("cons"), rS.getString("job_title"), rS.getString("job_status"), rS.getString("location")));
 
         }
         return reviews;

@@ -120,7 +120,7 @@ public class Company {
         ResultSet rS=stmt.executeQuery();
         while(rS.next()){
             
-            reviews.add(new Review(rS.getString("review"), rS.getString("pros"), rS.getString("cons"), rS.getString("job_title"), rS.getString("job_status"), rS.getString("location")));
+            reviews.add(new Review(rS.getInt("ratings"),rS.getString("review"), rS.getString("pros"), rS.getString("cons"), rS.getString("job_title"), rS.getString("job_status"), rS.getString("location")));
 
         }
         return reviews;
