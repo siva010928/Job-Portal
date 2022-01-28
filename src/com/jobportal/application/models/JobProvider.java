@@ -27,6 +27,7 @@ public class JobProvider extends  User{
     public void postJob(Job jobDetails,BigDecimal minSalary,BigDecimal maxSalary) throws SQLException{
         Pay salaryPay=new Pay(-1,minSalary, maxSalary, "MONTHLY");
 
+        
         try{
             App.conn.setAutoCommit(false);
             //inserting salary int pays db and getting it's id 
