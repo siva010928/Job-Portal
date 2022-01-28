@@ -55,6 +55,30 @@ public class Company {
         this.getRevenue().updatePay();
     }
 
+    // Adding review to the company
+    public void addReview(Review review) throws SQLException {
+        PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO reviews('job_title','ratings','job_status','location','review','pros','cons','job_seeker_id','company_id') VALUES(?,?,?,?,?,?,?,?,?)");
+        stmt.setString(1, review.getJobTitle());
+        stmt.setInt(2, review.getRatings());
+        stmt.setString(3, review.getJobStatus());
+        stmt.setString(4, review.getLocation());
+        stmt.setString(5, review.getReview());
+        stmt.setString(6, review.getPros());
+        stmt.setString(7, review.getCons());
+        stmt.setInt(8, App.id);
+        stmt.setInt(9, this.id);
+        int rowsInserted=stmt.executeUpdate();
+        this.reviews++;
+    }
+
+    // Deleting the company review 
+    public void deleteReview(Review review) throws SQLException {
+        PreparedStatement stmt=App.conn.prepareStatement("DELETE FROM reviews WHERE review_id=?");
+        stmt.setInt(1, review.getId());
+        int deletedRows=stmt.executeUpdate();
+        this.reviews--;
+    }
+
 
     //GetAllReviews(company)(default ratings desc)(search jobtitle, location)(rating Filter)
     public ArrayList<Review> getAllReviews(HashMap<String,String> searchFilter,HashMap<String,Integer> sortFilter,Integer daysFilter) throws SQLException{

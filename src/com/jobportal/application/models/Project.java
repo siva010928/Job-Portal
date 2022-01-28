@@ -111,6 +111,10 @@ public class Project {
         this.end = end;
     }
 
+    public Integer getId(){
+        return this.id;
+    }
+
     public void setId(int id) {
         this.id=id;
     }
