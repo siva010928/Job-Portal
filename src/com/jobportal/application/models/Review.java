@@ -42,22 +42,6 @@ public class Review {
         this.id = id;
     }
 
-    public JobSeeker getUser() {
-        return this.user;
-    }
-
-    public void setUser(JobSeeker user) {
-        this.user = user;
-    }
-
-    public Company getCompany() {
-        return this.company;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
-    }
-
     public LocalDateTime getReviewedAt() {
         return this.reviewedAt;
     }
