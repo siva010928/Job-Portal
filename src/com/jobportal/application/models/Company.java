@@ -3,6 +3,9 @@ package com.jobportal.application.models;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.jobportal.application.App;
 
@@ -51,6 +54,54 @@ public class Company {
 
         this.getRevenue().updatePay();
     }
+
+
+    //GetAllReviews(company)(default ratings desc)(search jobtitle, location)(rating Filter)
+    public ArrayList<Review> getAllReviews(HashMap<String,String> searchFilter,HashMap<String,Integer> sortFilter,Integer daysFilter) throws SQLException{
+        //for default showing ratings will be in descending order
+        sortFilter.put("ratings", -1);
+
+
+        StringBuilder query=new StringBuilder("SELECT * FROM reviews WHERE company_id=?");
+
+        //filterring last 7 days like
+        if(daysFilter!=-1){
+            query.append(" AND ");
+            query.append("reviewedAt>(DATE_SUB(CURRENT_DATE,INTERVAL "+daysFilter+" DAY))");
+        }
+
+        //filtering for where class of job title,location
+        for (Map.Entry<String,String> m : searchFilter.entrySet()) {
+            query.append(" AND ");
+            query.append(m.getKey());
+            query.append("LIKE");
+            query.append("%"+m.getValue()+"%");
+        }
+
+        //filtering for order by ratings it will be always the size of one
+        if(!sortFilter.isEmpty()){
+            query.append(" ORDER BY ");
+            for(Map.Entry<String,Integer> m:sortFilter.entrySet()){
+                query.append(m.getKey());
+                query.append(m.getValue()==1?" ASC":" DESC");
+                query.append(",");
+            }
+            query.deleteCharAt(query.length()-1);   
+        }
+
+        PreparedStatement stmt=App.conn.prepareStatement(query.toString());
+        
+        stmt.setInt(1,this.getId());//company_id
+        ArrayList<Review> reviews=new ArrayList<>();
+        ResultSet rS=stmt.executeQuery();
+        while(rS.next()){
+            
+            reviews.add(new Review(rS.getString("review"), rS.getString("pros"), rS.getString("cons"), rS.getString("job_title"), rS.getString("job_status"), rS.getString("location")));
+
+        }
+        return reviews;
+    }
+
 
 
     public Integer getId() {
