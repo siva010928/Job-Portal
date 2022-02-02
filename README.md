@@ -12,7 +12,7 @@ Project is created with:
 #### In development,takes few days to finish.
 
 ## class diagram
-![star uml](https://github.com/siva010928/Job-Portal/blob/main/class_dia.png)
+![star uml](https://github.com/siva010928/Job-Portal/blob/main/class_diagram.jpg)
 
 ## flow diagram
 ![miro](https://github.com/siva010928/Job-Portal/blob/main/activity_flow_diagram.jpg)
