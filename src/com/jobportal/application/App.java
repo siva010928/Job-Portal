@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.sound.midi.SysexMessage;
+
 
 import com.jobportal.application.models.Application;
 import com.jobportal.application.models.Company;
@@ -294,6 +294,7 @@ public class App {
     }
 
     public static void seeker_home() throws IOException, SQLException, ParseException, NoSuchAlgorithmException{
+        logginUser.generateProfile();
         System.out.println("-------------------Home-------------------");  
         System.out.println("1:  Profile"); 
         System.out.println("2:  My Jobs"); 
@@ -1379,6 +1380,7 @@ public class App {
     public static void seeker_application_view() throws IOException, SQLException, NumberFormatException, ParseException, NoSuchAlgorithmException{
         System.out.println("1:  View this Job"); 
         System.out.println("2: View Appliation");
+        System.out.println("3: Delete This Appliation");
         System.out.println("Press any key to go back!");
         switch (reader.readLine()) {
             case "1":
@@ -1391,7 +1393,10 @@ public class App {
                 seeker_application_view();
 
                 break;
-
+            case "3":
+                ((JobSeeker)logginUser).deleteApplication(current_application);
+                my_jobs_view();
+                break;
             default:
                 my_jobs_view();
                 break;

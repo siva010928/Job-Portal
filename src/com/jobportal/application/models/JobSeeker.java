@@ -559,6 +559,14 @@ public class JobSeeker extends User{
         System.err.println("Reviews Deleted: "+deletedRows);
     }
 
+    public void deleteApplication(Application application) throws SQLException {
+        PreparedStatement stmt=App.conn.prepareStatement("DELETE FROM applications WHERE application_id=?");
+        stmt.setInt(1, application.getId());
+        int deletedRows=stmt.executeUpdate();
+        System.err.println("Applications Deleted: "+deletedRows);
+    }
+
+
     public Integer getId(){
         return this.id;
     }
