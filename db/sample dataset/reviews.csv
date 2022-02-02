@@ -1,0 +1,5 @@
+review_id,job_title,ratings,job_status,location,review,pros,cons,reviewedAt,job_seeker_id,company_id
+3,"Database architech",5,"Current Employer",Coimbatore,Awesome,asd,asd,"2022-02-01 16:31:15",2,1
+4,"associate software engineer",3,"Current Employer",chennai,asdad,asda,asd,"2022-02-01 16:33:00",4,1
+5,"App developer",5,"Former Employer",coimbatore,asd,sd,sad,"2022-02-01 16:33:39",5,1
+6,fuck,10,NULL,fuccky,fuckass,badass,"he he","2022-02-02 15:42:01",1,1

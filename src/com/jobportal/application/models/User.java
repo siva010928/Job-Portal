@@ -4,8 +4,10 @@ import com.jobportal.application.*;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
+import java.io.IOException;
 import java.lang.System.Logger;
 import java.math.BigDecimal;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -42,7 +44,7 @@ public abstract class User {
         this.location=location;
     }
 
-    public static int login(String email,String password) throws SQLException{
+    public static int login(String email,String password) throws SQLException, NoSuchAlgorithmException, IOException, ParseException{
         PreparedStatement stmt=App.conn.prepareStatement("SELECT * FROM users JOIN user_types USING(user_type_id) WHERE email=? ");
         stmt.setString(1, email);
         //hash password  
@@ -51,11 +53,10 @@ public abstract class User {
         if(rS.isBeforeFirst()){
             rS.next();
             String retrievedPassword=rS.getString("password");
-            BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), retrievedPassword);
-            if(result.verified){
+            if(App.hashPassword(password).equals(retrievedPassword)){
                 App.user_id=rS.getInt("user_id");
                 String category=rS.getString("category");
-                if(category==UserType.JOB_SEEKER.toString()){
+                if(category.equals(UserType.JOB_SEEKER.toString())){
                     ResultSet temp_seekerResult=App.conn.prepareStatement("SELECT job_seeker_id FROM job_seekers WHERE user_id="+App.user_id).executeQuery();
                     temp_seekerResult.next();
 
@@ -69,9 +70,8 @@ public abstract class User {
                     App.logginUser.setUserType(UserType.JOB_SEEKER);
 
                     App.id=job_seeker_id;
-                    App.logginUser.generateProfile();
+                    // App.logginUser.generateProfile();
                 }else{
-                    stmt.close();
                     //getting logged in job provider
                     stmt=App.conn.prepareStatement("SELECT * FROM job_providers JOIN companies USING (company_id) JOIN pays ON pays.pay_id=companies.revenue_id WHERE user_id=?");
                     stmt.setInt(1, rS.getInt("user_id"));
@@ -87,35 +87,48 @@ public abstract class User {
                     ResultSet rCompany=stmt.executeQuery();
                     rCompany.next();
 
-                    Pay revenue=new Pay(rS.getInt("pay_id"),rS.getBigDecimal("from"), rS.getBigDecimal("to"), rS.getString("pay_type"));
-                    Company company=new Company(company_id,rCompany.getInt("reviews"), rCompany.getInt("ratings"), rS.getInt("founded"), rS.getInt("size"), rS.getString("name"), rS.getString("logo"), rS.getString("sector"), rS.getString("industry"), rS.getString("location"), revenue);
+                    Pay revenue=new Pay(rSprovider.getInt("revenue_id"),rSprovider.getBigDecimal("from"), rSprovider.getBigDecimal("to"), rSprovider.getString("pay_type"));
+                    Company company=new Company(company_id,rCompany.getInt("reviews"), rCompany.getInt("ratings"), rSprovider.getInt("founded"), rSprovider.getInt("size"), rSprovider.getString("name"), rSprovider.getString("logo"), rSprovider.getString("sector"), rSprovider.getString("industry"), rSprovider.getString("location"), revenue);
                     
                     App.logginUser=new JobProvider(UserType.JOB_PROVIDER,rS.getString("first_name"), rS.getString("last_name"), rS.getString("gender"),rS.getDate("DOB"),email,rS.getString("location"), rS.getString("phone"),rSprovider.getString("designation"), company);
                 }
             }
             else{
                     //wrong password but user exists
+                    System.out.println("Incorrect email or password...");
+                    App.login_view();
             }
         }else{
             //user does not exist
+            System.out.println("user not exist....");
+            System.out.println("please sign up to continue..");
+            try {
+                try {
+                    App.signup_view();
+                } catch (ParseException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
         }
         return App.id;
     }
 
 
-    public int signUp(User user,String password,String companyName,String designation,String companyLocation){
 
-        String hashedPassword = BCrypt.withDefaults().hashToString(12, password.toCharArray());     
+    public static int signUp(String firstName,String lastName,String email,String hashedPassword,UserType userType,String companyName,String designation,String companyLocation) throws PortalException{  
         int company_id=-1;
         PreparedStatement stmt;
         if(designation!=null){
             try {
-                stmt=App.conn.prepareStatement("SELECT * FROM companies WHERE name=?");
-                stmt.setString(1, companyName);
-                ResultSet rCompany=stmt.executeQuery();
-                if(!rCompany.next()) return -1;
-                company_id=rCompany.getInt("company_id");
+                //will always return other than -1
+                company_id=Company.getCompanyWithName(companyName);
             } catch (SQLException e) {
+                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -125,26 +138,28 @@ public abstract class User {
         //being storing into users db we alsow want to insert in seeker/provider table 
         //if after inserting into users table if any error happens there will user withou provider/seeker which is unethical
         try{
+            System.out.println("auto commit turned off");
             App.conn.setAutoCommit(false);
             //one transaction
 
             //inserting user into users db
-            stmt=App.conn.prepareStatement("INSERT INTO users VALUES(DEFAULT,?,?,?,?,?,?,?,DEFAULT,?,?)");
-            stmt.setString(1, user.getFirstName());
-            stmt.setString(2, user.getLastName());
-            stmt.setString(3, user.getEmail());
+            stmt=App.conn.prepareStatement("INSERT INTO users(first_name,last_name,email,password,user_type_id) VALUES(?,?,?,?,?)");//,?,?,?,DEFAULT,?,?
+            stmt.setString(1,firstName);
+            stmt.setString(2, lastName);
+            stmt.setString(3, email);
             stmt.setString(4, hashedPassword);
-            stmt.setString(5, user.getLocation());
-            stmt.setString(6, user.getGender());
-            stmt.setDate(7, user.getDOB());
-            stmt.setInt(8, user.getUserType().getUserTypeId());
-            stmt.setString(9, user.getPhone());
+            stmt.setInt(5, userType.getUserTypeId());
+            // stmt.setString(5, user.getLocation());
+            // stmt.setString(6, user.getGender());
+            // stmt.setDate(7, user.getDOB());
+            // stmt.setInt(8, user.getUserType().getUserTypeId());
+            // stmt.setString(9, user.getPhone());
             
             int rowsAffected=stmt.executeUpdate();
 
             //inserting into job_seekers
             App.user_id=App.getLastInsertId();
-            if(user.getUserType()==UserType.JOB_SEEKER){
+            if(userType==UserType.JOB_SEEKER){
                 stmt=App.conn.prepareStatement("INSERT INTO job_seekers(user_id) VALUES(?)");
                 stmt.setInt(1, App.user_id);
                 rowsAffected=stmt.executeUpdate();
@@ -152,14 +167,14 @@ public abstract class User {
             }else{
                 stmt.close();
 
-                if(company_id!=-1){//create new company
+                if(company_id==-1){//create new company
 
-                    Pay pay=new Pay(-1, new BigDecimal(0), new BigDecimal(0), "ANNUALLY");
+                    Pay pay=new Pay(-1, new BigDecimal(0.00), new BigDecimal(0.00), "ANNUALLY");
                     Integer revenue_id=pay.addPayToDb();
 
                     stmt=App.conn.prepareStatement("INSERT INTO companies(name,location,revenue_id) VALUES(?,?,?)");
                     stmt.setString(1, companyName);
-                    stmt.setString(2, location);
+                    stmt.setString(2, companyLocation);
                     stmt.setInt(3, revenue_id);
                     rowsAffected=stmt.executeUpdate();
                     company_id=App.getLastInsertId();
@@ -177,9 +192,11 @@ public abstract class User {
                     stmt.setInt(3, company_id);
                     rowsAffected=stmt.executeUpdate();
                 }
+                App.id=App.getLastInsertId();
 
                 
             }
+            System.out.println("commited");
             App.conn.commit();
         }catch(SQLException e){
             e.printStackTrace();
@@ -195,6 +212,7 @@ public abstract class User {
         finally{
             try {
                 App.conn.setAutoCommit(true);
+                System.out.println("auto commit turned on");
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -203,7 +221,7 @@ public abstract class User {
         return App.id;
     }
 
-    public  void updateBaseProfile(HashMap<String,String> updateStrings,String DOBupdates) throws ParseException, SQLException{
+    public  void updateBaseProfile() throws ParseException, SQLException{
         
         //can be used in MAIN class
         // DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
@@ -217,14 +235,36 @@ public abstract class User {
         // App.logginUser.setLocation(location);
 
         PreparedStatement stmt;
-        stmt=App.conn.prepareStatement("UPDATE users SET first_name=?,last_name=?,email=?,gender=?,DOB=?,location=? WHERE user_id=?");
+        stmt=App.conn.prepareStatement("UPDATE users SET first_name=?,last_name=?,email=?,gender=?,DOB=?,location=?,phone=? WHERE user_id=?");
         stmt.setString(1, this.getFirstName());
         stmt.setString(2, this.getLastName());
         stmt.setString(3, this.getEmail());
         stmt.setString(4, this.getGender());
         stmt.setDate(5, this.getDOB());
         stmt.setString(6, this.getLocation());
+        stmt.setString(7, "+91"+this.getPhone());
+        stmt.setInt(8, App.user_id);
         int writtenResults=stmt.executeUpdate();
+        System.err.println("updated: "+writtenResults);
+    }
+
+    public void updatePassword(String password) throws SQLException{
+        PreparedStatement stmt;
+        stmt=App.conn.prepareStatement("UPDATE users SET password=? WHERE user_id=?");
+        stmt.setString(1, password);
+        stmt.setInt(2, App.user_id);
+        int writtenResults=stmt.executeUpdate();
+        System.err.println("updated: "+writtenResults);
+    }
+
+    public boolean validatePassword(String password) throws SQLException{
+        PreparedStatement stmt;
+        stmt=App.conn.prepareStatement("SELECT password FROM users WHERE user_id=?");
+        stmt.setInt(1, App.user_id);   
+        ResultSet rS=stmt.executeQuery();
+        rS.next();
+        if(rS.getString("password").equals(password)) return true;
+        return false;
     }
     
     //both seeker and providers jobs feed
@@ -296,6 +336,9 @@ public abstract class User {
     public void setDOB(Date DOB) {
         this.DOB = DOB;
     }
+
+
+    public abstract String toString();
    
 
 }

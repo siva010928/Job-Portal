@@ -11,32 +11,32 @@ public class Education {
     private Integer passout;
     private Float grade;
 
-    public Education(Integer education_id,String education, String course, String institute, String courseType, Integer passout) {
+    public Education(Integer education_id,String education, String course, String institute, String courseType, Integer passout,Float grade) {
         this.id=education_id;
         this.education = education;
         this.course = course;
         this.institute = institute;
         this.courseType = courseType;
         this.passout = passout;
+        this.grade=grade;
+    }
+
+    public Education() {
     }
 
     //when job provider edits his educations list details
-    public void updateEducation(Education education) throws SQLException{
-        this.setCourse(education.getCourse());
-        this.setCourseType(education.getCourseType());
-        this.setEducation(education.getEducation());
-        this.setInstitute(education.getInstitute());
-        this.setPassout(education.getPassout());
-        this.setGrade(education.getGrade());
+    public void updateEducation() throws SQLException{
+        
 
         //then update this to  db
-        PreparedStatement stmt=App.conn.prepareStatement("UPDATE educations SET course=?,course_type=?,education=?,institute=?,passout=?,grade=? WHERE education_id=?");
+        PreparedStatement stmt=App.conn.prepareStatement("UPDATE educations SET course=?,course_type=?,education_level=?,institution=?,passout=?,grade=? WHERE education_id=?");
         stmt.setString(1, this.getCourse());
         stmt.setString(2, this.getCourseType());
         stmt.setString(3, this.getEducation());
         stmt.setString(4, this.getInstitute());
         stmt.setInt(5, this.getPassout());
-        stmt.setInt(6, this.getId());
+        stmt.setFloat(6, this.getGrade());
+        stmt.setInt(7, this.getId());
 
         int updatedResults=stmt.executeUpdate();
     }
@@ -95,6 +95,12 @@ public class Education {
 
     public void setGrade(Float grade) {
         this.grade = grade;
+    }
+
+    @Override
+    public String toString() {
+        return "Education [course=" + course + ", courseType=" + courseType + ", education=" + education + ", grade="
+                + grade + ", institute=" + institute + ", passout=" + passout + "]";
     }
 
    

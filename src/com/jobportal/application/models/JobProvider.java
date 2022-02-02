@@ -24,9 +24,8 @@ public class JobProvider extends  User{
 
 
     //post a job from this provider
-    public void postJob(Job jobDetails,BigDecimal minSalary,BigDecimal maxSalary) throws SQLException{
-        Pay salaryPay=new Pay(-1,minSalary, maxSalary, "MONTHLY");
-
+    public void postJob(Job jobDetails) throws SQLException{
+        Pay salaryPay=jobDetails.getPay();
         
         try{
             App.conn.setAutoCommit(false);
@@ -35,16 +34,18 @@ public class JobProvider extends  User{
 
 
             //inserting job
-            PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO jobs('title','description','location_type','location','fullOrPartTime','openings','job_provider_id','company_id','pay_id') VALUES(?,?,?,?,?,?,?,?)");
+            PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO jobs(title,description,location_type,location,fullOrPartTime,openings,education_level,candidate_profile,job_provider_id,company_id,pay_id) VALUES(?,?,?,?,?,?,?,?,?,?,?)");
             stmt.setString(1, jobDetails.getJobTitle());
             stmt.setString(2, jobDetails.getJobDescription());
             stmt.setString(3, jobDetails.getLocationType());
             stmt.setString(4, jobDetails.getLocation());
             stmt.setString(5, jobDetails.getFullOrPartTime());
             stmt.setInt(6, jobDetails.getOpenings());
-            stmt.setInt(7, App.id);
-            stmt.setInt(8, this.company.getId());
-            stmt.setInt(9, last_pay_id);
+            stmt.setString(7, jobDetails.getEducationLevel());
+            stmt.setString(8, jobDetails.getCandidateProfile());
+            stmt.setInt(9, App.id);
+            stmt.setInt(10, this.company.getId());
+            stmt.setInt(11, last_pay_id);
             int writtenResults=stmt.executeUpdate();
 
             //getting the last inserted job_id        
@@ -75,6 +76,7 @@ public class JobProvider extends  User{
                 writtenResults=stmt.executeUpdate();
             }
             App.conn.setAutoCommit(true);
+            System.out.println("Posted successfully...");
         }
         catch(SQLException e){
             e.printStackTrace();
@@ -104,38 +106,50 @@ public class JobProvider extends  User{
     public ArrayList<Job> getJobsFeed(HashMap<String,String> searchFilter,HashMap<String,Integer> sortFilter,Integer daysFilter,Integer salaryFilter) throws SQLException{
         StringBuilder query=new StringBuilder("SELECT * FROM jobs JOIN pays USING(pay_id) JOIN companies USING(company_id) WHERE job_provider_id=?");
         
-        //
+        //default sorted by posted date desc and job title asc descending order
+        if(sortFilter.isEmpty()){
+            sortFilter.put("jobs.postedAt", -1);
+            sortFilter.put("jobs.title", 1);
+        }
+
+        
         //filtering by salary
         if(salaryFilter!=-1){
             //(pays.from >= 17000 OR pays.to >= 17000)
             query.append(" AND ");
-            query.append("(pays.from >= "+salaryFilter +" OR pays.to >= 17000) ");
+            query.append("(pays.from >= "+salaryFilter +" OR pays.to >="+salaryFilter+ ") ");
         }
 
         //filterring last 7 days like
         if(daysFilter!=-1){
             query.append(" AND ");
-            query.append("postedAt>(DATE_SUB(CURRENT_DATE,INTERVAL "+daysFilter+" DAY))");
+            query.append("jobs.postedAt>(DATE_SUB(CURRENT_DATE,INTERVAL "+daysFilter+" DAY))");
         }
 
-        //filtering for where class of job title,location,company_name
-        for (Map.Entry<String,String> m : searchFilter.entrySet()) {
-            query.append(" AND ");
-            query.append(m.getKey());
-            query.append("LIKE");
-            query.append("%"+m.getValue()+"%");
+        //filtering for where class of job title,location
+        if(!searchFilter.isEmpty()){
+            for (Map.Entry<String,String> m : searchFilter.entrySet()) {
+                // System.out.println("search Filter....");
+                query.append(" AND ");
+                query.append(m.getKey());//field name
+                query.append(" LIKE ");
+                query.append("'%"+m.getValue()+"%' ");//field value
+            }
         }
 
         //filtering for order by class of postedAt,title(sort) it will be always the size of one
         if(!sortFilter.isEmpty()){
+            // System.out.println("sort Filter....");
             query.append(" ORDER BY ");
             for(Map.Entry<String,Integer> m:sortFilter.entrySet()){
                 query.append(m.getKey());
-                query.append(m.getValue()==1?" ASC":" DESC");
+                query.append(m.getValue()==1?" ASC ":" DESC ");
                 query.append(",");
             }
             query.deleteCharAt(query.length()-1);   
         }
+
+        query.append("LIMIT 10");
 
         PreparedStatement stmt=App.conn.prepareStatement(query.toString());
         
@@ -152,28 +166,29 @@ public class JobProvider extends  User{
             Pay salaryPay=new Pay(rS.getInt("pay_id"),rS.getBigDecimal("from"),rS.getBigDecimal("to"), rS.getString("pay_type"));
 
             
-            //getting company details of the job posted by this job provider
-            stmt=App.conn.prepareStatement("SELECT COUNT(*) AS reviews,AVG(ratings) AS ratings FROM reviews WHERE company_id=?");
-            stmt.setInt(1, company_id);
-            ResultSet rCompany=stmt.executeQuery();
+            // //getting company details of the job posted by this job provider
+            // stmt=App.conn.prepareStatement("SELECT COUNT(*) AS reviews,AVG(ratings) AS ratings FROM reviews WHERE company_id=?");
+            // stmt.setInt(1, company_id);
+            // ResultSet rCompany=stmt.executeQuery();
 
-            stmt=App.conn.prepareStatement("SELECT * FROM pays WHERE pay_id=?");
-            stmt.setInt(1, revenue_id);
-            ResultSet rCompanyRevenue=stmt.executeQuery();
+            // stmt=App.conn.prepareStatement("SELECT * FROM pays WHERE pay_id=?");
+            // stmt.setInt(1, revenue_id);
+            // ResultSet rCompanyRevenue=stmt.executeQuery();
 
-            Pay revenue=new Pay(rCompanyRevenue.getInt("pay_id"),rCompanyRevenue.getBigDecimal("from"),rCompanyRevenue.getBigDecimal("to"), rCompanyRevenue.getString("pay_type"));
-            Company company=new Company(company_id,rCompany.getInt("reviews"), rCompany.getInt("ratings"), rS.getInt("founded"), rS.getInt("size"), rS.getString("name"), rS.getString("logo"), rS.getString("sector"), rS.getString("industry"), rS.getString("location"), revenue);
+            // Pay revenue=new Pay(rCompanyRevenue.getInt("pay_id"),rCompanyRevenue.getBigDecimal("from"),rCompanyRevenue.getBigDecimal("to"), rCompanyRevenue.getString("pay_type"));
+            Company company=new Company(company_id,-1, -1, rS.getInt("founded"), rS.getInt("size"), rS.getString("name"), rS.getString("logo"), rS.getString("sector"), rS.getString("industry"), rS.getString("location"), new Pay(-1, new BigDecimal(0), new BigDecimal(0),"ANNUALLY"));
 
 
             //getting applications of hired,rejected,active,hired,reviewed count of particular provider's job
-            Integer hired,rejected,active,reviewed;
+            Integer hired=0,rejected=0,active=0,reviewed=0;
 
             //hired-count
             stmt=App.conn.prepareStatement("SELECT COUNT(*) AS hired FROM applications WHERE job_id=? AND status=?");
             stmt.setInt(1,job_id);
             stmt.setString(2, ApplicationStatus.HIRED.toString());
             ResultSet rHired=stmt.executeQuery();
-            hired=rHired.getInt("hired");
+            while(rHired.next())
+                hired=rHired.getInt("hired");
 
 
             //rejected-count
@@ -181,25 +196,28 @@ public class JobProvider extends  User{
             stmt.setInt(1,job_id);
             stmt.setString(2, ApplicationStatus.REJECTED.toString());
             ResultSet rRejected=stmt.executeQuery();
-            rejected=rRejected.getInt("rejected");
+            while(rRejected.next())
+                rejected=rRejected.getInt("rejected");
 
             //active-count
             stmt=App.conn.prepareStatement("SELECT COUNT(*) AS active FROM applications WHERE job_id=? AND status=?");
             stmt.setInt(1,job_id);
             stmt.setString(2, ApplicationStatus.ACTIVE.toString());
             ResultSet rActive=stmt.executeQuery();
-            active=rActive.getInt("active");
+            while(rActive.next())
+                active=rActive.getInt("active");
 
             //reviewed-count
             stmt=App.conn.prepareStatement("SELECT COUNT(*) AS reviewed FROM applications WHERE job_id=? AND status=?");
             stmt.setInt(1,job_id);
             stmt.setString(2, ApplicationStatus.REVIEWED.toString());
             ResultSet rReviewed=stmt.executeQuery();
-            reviewed=rReviewed.getInt("reviewed");
+            while(rReviewed.next())
+                reviewed=rReviewed.getInt("reviewed");
             
     
             //getting job_types
-            stmt=App.conn.prepareStatement("SELECT * FROM job_job_type JOIN job_types USING(job_type_id) WHERE job_id=?");
+            stmt=App.conn.prepareStatement("SELECT * FROM job_job_types JOIN job_types USING(job_type_id) WHERE job_id=?");
             stmt.setInt(1,job_id);
             ResultSet rJobtypes=stmt.executeQuery();
 
@@ -216,10 +234,11 @@ public class JobProvider extends  User{
             ArrayList<String> job_schedules=new ArrayList<>();
 
             while(rJobschedules.next()){
-                job_schedules.add(rJobtypes.getString("name"));
+                job_schedules.add(rJobschedules.getString("name"));
             }
             jobs.add(new Job(job_id, active, reviewed, hired, rejected, rS.getInt("openings"),rS.getString("title"), rS.getString("description"), rS.getString("location_type"), rS.getString("location"), rS.getString("fullOrPartTime"), rS.getString("job_status"), rS.getString("candidate_profile"), rS.getString("education_level"), salaryPay, rS.getTimestamp("postedAt"), job_types, job_schedules,company));
         }
+        System.out.println("jobs successfully fetched.....");
         return jobs;
     }
 
@@ -238,7 +257,7 @@ public class JobProvider extends  User{
         this.setDesignation(designation);
         PreparedStatement stmt=App.conn.prepareStatement("UPDATE job_providers SET designation=? WHERE job_provider_id=?");
         stmt.setString(1, this.designation);
-        stmt.setInt(1,App.id);
+        stmt.setInt(2,App.id);
         int updateResults=stmt.executeUpdate();
     }
 
@@ -257,6 +276,23 @@ public class JobProvider extends  User{
     public void setCompany(Company company) {
         this.company = company;
     }    
+
+
+    @Override
+    public String toString() {
+        return "{" +
+            " userType='" + getUserType() + "'" +
+            ", firstName='" + getFirstName() + "'" +
+            ", lastName='" + getLastName() + "'" +
+            ", gender='" + getGender() + "'" +
+            ", email='" + getEmail() + "'" +
+            ", location='" + getLocation() + "'" +
+            ", phone='" + getPhone() + "'" +
+            ", DOB='" + getDOB() + "'" +
+            " designation='" + getDesignation() + "'" +
+            ", company='" + getCompany().getName() + "'" +
+            "}";
+    }
 
    
 }

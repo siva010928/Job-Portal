@@ -19,10 +19,14 @@ public class Pay {
         this.to = to;
         this.payType = payType;
     }
+    public Pay(){
+        this.from=new BigDecimal(0);
+        this.to=new BigDecimal(0);
+    }
 
     public Integer addPayToDb() throws SQLException {
         try{
-            PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO PAYS VALUES(?,?,?)");
+            PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO pays VALUES(DEFAULT,?,?,?)");
             stmt.setBigDecimal(1, this.from);
             stmt.setBigDecimal(2, this.to);
             stmt.setString(3, this.payType);
@@ -36,12 +40,18 @@ public class Pay {
     }
 
     public void updatePay() throws SQLException{
-        PreparedStatement stmt=App.conn.prepareStatement("UPDATE PAYS  SET from=?,to=?,pay_type=? WHERE pay_id=?");
+        PreparedStatement stmt=App.conn.prepareStatement("UPDATE `job_portal`.`pays` SET `from` = ?, `to` =?, `pay_type` = ? WHERE (`pay_id` = ?)");
         stmt.setBigDecimal(1, this.getFrom());
         stmt.setBigDecimal(2, this.getTo());
         stmt.setString(3, this.getPayType());
         stmt.setInt(4, this.getId());
         int rowsAffected=stmt.executeUpdate();
+    }
+
+
+    @Override
+    public String toString() {
+        return "Salary  ₹"+this.getFrom()+" - "+"₹"+this.getTo()+" per "+(this.getPayType().equals("MONTHLY")?"Month":"Annum");
     }
     
 

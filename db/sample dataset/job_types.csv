@@ -1,0 +1,7 @@
+job_type_id,name
+1,Permanent
+2,Temporary
+3,Freelance
+4,Volunteer
+5,Internship
+6,Fresher

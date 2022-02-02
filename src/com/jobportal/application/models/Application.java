@@ -42,8 +42,9 @@ public class Application {
         ArrayList<String> answers=new ArrayList<>();
         
         int job_id=this.job.getId();
-        PreparedStatement stmt=App.conn.prepareStatement("SELECT * FROM seeker_answers WHERE application_id=?");
+        PreparedStatement stmt=App.conn.prepareStatement("SELECT * FROM seeker_answers JOIN applications USING(application_id) WHERE application_id=? AND job_id=?");
         stmt.setInt(1, this.getId());
+        stmt.setInt(2, job_id);
         ResultSet rAnswers=stmt.executeQuery();
         while(rAnswers.next()){
             answers.add(rAnswers.getString("answer"));
@@ -57,6 +58,7 @@ public class Application {
         stmt.setString(1,updatedStatus);
         stmt.setInt(2, this.getId());
         int writtenResults=stmt.executeUpdate();
+        System.err.println("status updated");
     }
 
     public ArrayList<String> getAnswers() {
@@ -114,4 +116,33 @@ public class Application {
     public LocalDateTime getAppliedAt() {
         return appliedAt;
     }
+
+    @Override
+    public String toString() {
+        if(App.logginUser.getUserType().equals(UserType.JOB_SEEKER))
+            return "{" +
+            ", jobSeeker='" + getJobSeeker().getFirstName() + "'" +
+            ", job='" + getJob() + "'" +
+            ", resume='" + getResume() + "'" +
+            ", applicationStatus='" + getApplicationStatus() + "'" +
+            "}";
+        return "First Name: "+this.jobSeeker.getFirstName()+"    email: "+this.getJobSeeker().getEmail()+"    applicationStatus: " + applicationStatus + "    appliedAt: " + App.dateTimeFormatter.format(appliedAt) + "    resume: " + resume;
+    }
+    
+
+    //with questions and answers
+    public String show_details(){
+        StringBuilder s=new StringBuilder();
+        s.append("\n\n---------------------------Applicant details----------------------------------\n");
+        s.append(jobSeeker.toString()+"\n\n\n\n");
+        s.append("---------------------------Questions and answers----------------------------------\n");
+        for(int i=0;i<this.job.getQuestionsStrings().size();i++){
+            s.append("ques "+i+1+": "+job.getQuestionsStrings().get(i)+"\n");
+            s.append("ans "+i+1+": "+this.getAnswers().get(i)+"\n");
+        }
+        s.append("\n\n---------------------------Job Details----------------------------------\n");
+        s.append(job.show_details());
+        return s.toString();
+    }
+    
 }

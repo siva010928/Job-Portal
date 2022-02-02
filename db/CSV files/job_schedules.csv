@@ -1,0 +1,9 @@
+job_schedule_id,name
+1,"Morning shift"
+2,"Day shift"
+3,"Evening shift"
+4,"Night shift"
+5,"Flexible shift"
+6,"Rotational shift"
+7,"Fixed shift"
+8,"US shift"

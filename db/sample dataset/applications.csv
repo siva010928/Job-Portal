@@ -1,0 +1,8 @@
+application_id,status,appliedAt,resume,job_seeker_id,job_id
+1,ACTIVE,"2022-01-31 23:59:13",resume_siva1,1,4
+4,REJECTED,"2022-02-01 10:55:27",resume_siva_1,1,3
+5,ACTIVE,"2022-02-01 13:02:30",resume_dhanush_2,2,12
+6,ACTIVE,"2022-02-01 13:08:30",resume_siva_1,1,13
+7,REVIEWED,"2022-02-01 13:21:54",resume_siva_1,1,12
+8,REVIEWED,"2022-02-01 13:23:02",resume_rahul_3,3,12
+9,ACTIVE,"2022-02-01 13:23:47",resume_prasanth_4,4,12

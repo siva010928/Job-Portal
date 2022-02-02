@@ -1,5 +1,6 @@
 package com.jobportal.application.models;
 
+import java.lang.management.ThreadInfo;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,6 +15,7 @@ public class Company {
     private Integer id,reviews,ratings,founded,size;
     private String name,logo,sector,industry,location;
     private Pay revenue;
+    private String Owner;
 
     
     public Company(Integer id,Integer reviews, Integer ratings, Integer founded, Integer size, String name, String logo, String sector, String industry, String location, Pay revenue) {
@@ -28,17 +30,18 @@ public class Company {
         this.industry = industry;
         this.location = location;
         this.revenue = revenue;
+
+        try {
+            this.generateOwner();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
-    public void updateCompany(Company company) throws SQLException{
-        this.setFounded(company.getFounded());
-        this.setIndustry(company.getIndustry());
-        this.setLocation(company.getLocation());
-        this.setLogo(company.getLogo());
-        this.setName(company.getName());
-        this.setRevenue(company.getRevenue());
-        this.setSector(company.getSector());
-        this.setSize(company.getSize());
+    
+
+    public void updateCompany() throws SQLException{
 
         //then update this to  db
         PreparedStatement stmt=App.conn.prepareStatement("UPDATE companies SET name=?,logo=?,sector=?,industry=?,size=?,founded=?,location=? WHERE company_id=?");
@@ -57,7 +60,7 @@ public class Company {
 
     // Adding review to the company
     public void addReview(Review review) throws SQLException {
-        PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO reviews('job_title','ratings','job_status','location','review','pros','cons','job_seeker_id','company_id') VALUES(?,?,?,?,?,?,?,?,?)");
+        PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO `job_portal`.`reviews` (`job_title`, `ratings`, `job_status`, `location`, `review`, `pros`, `cons`, `job_seeker_id`, `company_id`)  VALUES(?,?,?,?,?,?,?,?,?)");
         stmt.setString(1, review.getJobTitle());
         stmt.setInt(2, review.getRatings());
         stmt.setString(3, review.getJobStatus());
@@ -67,8 +70,10 @@ public class Company {
         stmt.setString(7, review.getCons());
         stmt.setInt(8, App.id);
         stmt.setInt(9, this.id);
+        System.err.println("\n"+stmt.toString()+"\n");
         int rowsInserted=stmt.executeUpdate();
         this.reviews++;
+        System.err.println("Reviewed Successfully..");
     }
 
     // Deleting the company review 
@@ -83,7 +88,8 @@ public class Company {
     //GetAllReviews(company)(default ratings desc)(search jobtitle, location)(rating Filter)
     public ArrayList<Review> getAllReviews(HashMap<String,String> searchFilter,HashMap<String,Integer> sortFilter,Integer daysFilter) throws SQLException{
         //for default showing ratings will be in descending order
-        sortFilter.put("ratings", -1);
+        if(sortFilter.isEmpty())
+            sortFilter.put("ratings", -1);
 
 
         StringBuilder query=new StringBuilder("SELECT * FROM reviews WHERE company_id=?");
@@ -98,8 +104,8 @@ public class Company {
         for (Map.Entry<String,String> m : searchFilter.entrySet()) {
             query.append(" AND ");
             query.append(m.getKey());
-            query.append("LIKE");
-            query.append("%"+m.getValue()+"%");
+            query.append(" LIKE ");
+            query.append("'%"+m.getValue()+"%'");
         }
 
         //filtering for order by ratings it will be always the size of one
@@ -107,26 +113,37 @@ public class Company {
             query.append(" ORDER BY ");
             for(Map.Entry<String,Integer> m:sortFilter.entrySet()){
                 query.append(m.getKey());
-                query.append(m.getValue()==1?" ASC":" DESC");
+                query.append(m.getValue()==1?" ASC ":" DESC ");
                 query.append(",");
             }
             query.deleteCharAt(query.length()-1);   
         }
 
+        query.append("LIMIT 10");
         PreparedStatement stmt=App.conn.prepareStatement(query.toString());
         
         stmt.setInt(1,this.getId());//company_id
+        System.err.println("\n"+stmt.toString()+"\n");
         ArrayList<Review> reviews=new ArrayList<>();
         ResultSet rS=stmt.executeQuery();
         while(rS.next()){
             
-            reviews.add(new Review(rS.getInt("ratings"),rS.getString("review"), rS.getString("pros"), rS.getString("cons"), rS.getString("job_title"), rS.getString("job_status"), rS.getString("location")));
+            reviews.add(new Review(rS.getTimestamp("reviewedAt"),rS.getInt("ratings"),rS.getString("review"), rS.getString("pros"), rS.getString("cons"), rS.getString("job_title"), rS.getString("job_status"), rS.getString("location")));
 
         }
         return reviews;
     }
 
-
+    public static int getCompanyWithName(String companyName) throws SQLException{
+        PreparedStatement stmt=App.conn.prepareStatement("SELECT * FROM companies WHERE name=?");
+        stmt.setString(1, companyName);
+        ResultSet rCompany=stmt.executeQuery();
+        if(!rCompany.next()){
+            System.out.println("Company name not exists...");
+            return -1;
+        } 
+        return rCompany.getInt("company_id");
+    }
 
     public Integer getId() {
         return this.id;
@@ -215,6 +232,39 @@ public class Company {
     public void setRevenue(Pay revenue) {
         this.revenue = revenue;
     }
+
+    public void generateOwner() throws SQLException{
+        PreparedStatement stmt=App.conn.prepareStatement("SELECT * FROM job_providers JOIN users USING(user_id) WHERE company_id=? AND designation='owner'");
+        stmt.setInt(1, this.getId());
+        ResultSet rS= stmt.executeQuery();
+        rS.next();
+        this.Owner=rS.getString("first_name")+" "+rS.getString("last_name");
+    }
+
+	public String show_details() {
+        return ""
+        +"Company Name: "+this.getName()+"\n"
+        +"Owner: "+this.Owner+"\n"
+        +"Location: "+this.getLocation()+"\n"+
+        "reviews='" + getReviews() + "\n"+
+            "ratings='" + getRatings() + "\n"+
+            "founded='" + getFounded() + "\n"+
+            "size='" + getSize() +"\n" +
+            "name='" + getName() + "\n" +
+            "logo='" + getLogo() + "\n" +
+            "sector='" + getSector() + "\n" +
+            "industry='" + getIndustry() +"\n" +
+            "location='" + getLocation() + "\n"+
+            "revenue='" + getRevenue().toString() +"\n" ;
+
+	}
+
+    @Override
+    public String toString() {
+        return "Company [name=" + name + ", location=" + location + ", ratings=" + ratings + ", reviews=" + reviews
+                + "]";
+    }
+    
 
         
 }

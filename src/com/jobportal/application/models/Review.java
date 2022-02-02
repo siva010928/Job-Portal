@@ -15,7 +15,10 @@ public class Review {
     private String review,pros,cons,jobTitle,jobStatus,location;
 
     //posting a review
-    public Review(Integer ratings,String review, String pros, String cons, String jobTitle, String jobStatus, String location) {
+    public Review(Timestamp reviewedAt,Integer ratings,String review, String pros, String cons, String jobTitle, String jobStatus, String location) {
+        //timestamp.toInstant().atZone(zoneId).toLocalDate()
+        //ZoneOffset.UTC
+        this.reviewedAt = reviewedAt.toInstant().atZone(ZoneOffset.UTC).toLocalDateTime();
         this.ratings=ratings;
         this.review = review;
         this.pros = pros;
@@ -39,19 +42,13 @@ public class Review {
         this.location = location;
     }
 
-    public void updateReview(Review review) throws SQLException{
+    public Review() {
+	}
 
-        this.setJobTitle(review.getJobTitle());
-        this.setRatings(review.getRatings());
-        this.setJobStatus(review.getJobStatus());
-        this.setLocation(review.getLocation());
-        this.setReview(review.getReview());
-        this.setPros(review.getPros());
-        this.setCons(review.getCons());
-        this.setReviewedAt(review.getReviewedAt());
+	public void updateReview() throws SQLException{
         
         //Updating review to db
-        PreparedStatement stmt=App.conn.prepareStatement("UPDATE reviews SET job_title=?,ratings=?,job_status=?,location=?,review=?,pros=?,cons=?,reviewdAt=DEFAULT WHERE review_id=?)");
+        PreparedStatement stmt=App.conn.prepareStatement("UPDATE reviews SET job_title=?,ratings=?,job_status=?,location=?,review=?,pros=?,cons=? WHERE review_id=?");
         stmt.setString(1, this.getJobTitle());
         stmt.setInt(2, this.getRatings());
         stmt.setString(3, this.getJobStatus());
@@ -61,6 +58,7 @@ public class Review {
         stmt.setString(7, this.getCons());
         stmt.setInt(8, this.getId());
         int updatedResults=stmt.executeUpdate();
+        System.out.println("review update: "+updatedResults);
     }
 
 
@@ -98,6 +96,21 @@ public class Review {
     
     public Integer getRatings() {
         return this.ratings;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+            " id='" + getId() + "'" +
+            ", ratings='" + getRatings() + "'" +
+            ", reviewedAt='" + getReviewedAt() + "'" +
+            ", review='" + getReview() + "'" +
+            ", pros='" + getPros() + "'" +
+            ", cons='" + getCons() + "'" +
+            ", jobTitle='" + getJobTitle() + "'" +
+            ", jobStatus='" + getJobStatus() + "'" +
+            ", location='" + getLocation() + "'" +
+            "}";
     }
 
     public void setRatings(Integer ratings) {

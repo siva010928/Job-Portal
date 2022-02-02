@@ -24,15 +24,14 @@ public class Employment {
         }else this.end=end;
     }
 
+    public Employment() {
+    }
+
     //when job provider edits his educations list details
-    public void updateEmployment(Employment employment) throws SQLException{
-        this.setStart(employment.getStart());
-        this.setEnd(employment.getEnd());
-        this.setDesignation(employment.getDesignation());
-        this.setOrganization(employment.getOrganization());
+    public void updateEmployment() throws SQLException{
 
         //then update this to  db
-        PreparedStatement stmt=App.conn.prepareStatement("UPDATE employments SET start=?,end=?,designation=?,organization=? WHERE employment_id=?");
+        PreparedStatement stmt=App.conn.prepareStatement("UPDATE employments SET start_date=?,end_date=?,designation=?,organization=? WHERE employment_id=?");
         stmt.setDate(1, this.getStart());
 
         //if job seeker does not fill end date in this education in edit education then set null in databse
@@ -101,6 +100,14 @@ public class Employment {
     public void setIsCurrentCompany(boolean isCurrentCompany) {
         this.isCurrentCompany = isCurrentCompany;
     }
+
+    @Override
+    public String toString() {
+        return "Employment [designation=" + designation + ", end=" + end + ", isCurrentCompany=" + isCurrentCompany
+                + ", organization=" + organization + ", start=" + start + "]";
+    }
+
+    
     
 }
 

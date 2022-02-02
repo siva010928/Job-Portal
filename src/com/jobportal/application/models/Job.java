@@ -39,6 +39,20 @@ public class Job {
         this.questionsStrings = questionsStrings;
     }
 
+    public Job(){
+        
+    }
+
+    {
+        this.jobTypes=new ArrayList<>();
+        this.jobSchedules=new ArrayList<>();
+        this.questions=new ArrayList<>();
+        this.questionsStrings=new ArrayList<>();
+        this.jobTypesIds=new ArrayList<>();
+        this.jobSchedulesIds=new ArrayList<>();
+    }
+
+
     //only for getting jobs feed to job seeker
     public Job(Integer id, Integer openings, String jobTitle, String jobDescription, String locationType, String location, String fullOrPartTime, String jobStatus, String candidateProfile, String educationLevel, Pay pay, Timestamp postedAt, ArrayList<String> jobTypes, ArrayList<String> jobSchedules, Company company) {
         this.id = id;
@@ -90,9 +104,17 @@ public class Job {
     }
 
     //get All candidates applied to this job;
-    //can be filter by (active,reviewed,rejected)
+    //can be filter by (active,reviewed,rejected,hired)
     //can be sorted by applied_date and first name(asc/desc)
     public ArrayList<Application> getApplications(String jobstatusFilter,HashMap<String,Integer> sortFilter) throws SQLException{
+        
+
+        //default sorted by applied date desc and first name of the user asc descending order
+        if(sortFilter.isEmpty()){
+            sortFilter.put("appliedAt", -1);
+            sortFilter.put("first_name", 1);
+        }
+
         //at first this job does not load any questionsIds and questionsStrings
         //at this calling of method,sure job provider will review atleast one applicants so they need to see their's answers with questions
         this.generateQuestionsIds();
@@ -103,9 +125,10 @@ public class Job {
         //filter by (active,reviewed,rejected)
         if(!jobstatusFilter.isEmpty()){
             query.append(" AND ");
-            query.append("status="+jobstatusFilter);
+            query.append("applications.status="+"'"+jobstatusFilter+"'");
         }
 
+        
         //can be sorted by applied_date and first name(asc/desc)
         if(!sortFilter.isEmpty()){
             query.append(" ORDER BY ");
@@ -117,6 +140,7 @@ public class Job {
             query.deleteCharAt(query.length()-1);   
         }
         PreparedStatement stmt=App.conn.prepareStatement(query.toString());
+        System.err.println(query.toString());
         stmt.setInt(1, job_id);
         ResultSet rApplications=stmt.executeQuery();
 
@@ -134,6 +158,21 @@ public class Job {
     public void applyJob(ArrayList<String> answers,String resume) {
         int job_id=this.id;
 
+
+        PreparedStatement stmt;
+        try {
+            stmt = App.conn.prepareStatement("SELECT * FROM applications WHERE job_seeker_id=? AND job_id=?");
+            stmt.setInt(1, App.id);
+            stmt.setInt(2, job_id);
+            if(stmt.executeQuery().isBeforeFirst()){
+                System.out.println("Already Applied... check my applications");
+                return;
+            } 
+        } catch (SQLException e2) {
+            // TODO Auto-generated catch block
+            e2.printStackTrace();
+        }
+
         //here we want to use transaction principle 
         //once a use applied a job values are inserted into both applications db and answers db
         //what if values after inserted into applications db and get interrupted,so there not be any answers  with this application_id
@@ -142,7 +181,7 @@ public class Job {
             App.conn.setAutoCommit(false);
             //one transaction
 
-            PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO applications(resume,job_seeker_id,job_id) VALUES(?,?,?)");
+            stmt=App.conn.prepareStatement("INSERT INTO applications(resume,job_seeker_id,job_id) VALUES(?,?,?)");
             stmt.setString(1, resume);
             stmt.setInt(2, App.id);
             stmt.setInt(3, job_id);
@@ -160,6 +199,7 @@ public class Job {
                 rowsAffected=stmt.executeUpdate();
             }
             App.conn.commit();
+            System.out.println("Applied successfully...");
         }catch(SQLException e){
             e.printStackTrace();
             try {
@@ -204,17 +244,19 @@ public class Job {
         
     }
 
-    public void generateQuestions() throws SQLException{
+    public ArrayList<String> generateQuestions() throws SQLException{
         this.generateQuestionsIds();
-        this.generateQuestionsAsStrings();
+        return this.generateQuestionsAsStrings();
     }
 
     public ArrayList<Integer> generateQuestionsIds() throws SQLException{
         ArrayList<Integer> questionsIds=new ArrayList<>();
-
+        
         //base case
         if(!this.questions.isEmpty()) return this.questions;
-        
+
+        this.questions=new ArrayList<>();
+
         PreparedStatement stmt=App.conn.prepareStatement("SELECT * FROM questions WHERE job_id=?");
         stmt.setInt(1,this.getId());
         ResultSet rS=stmt.executeQuery();
@@ -228,11 +270,12 @@ public class Job {
 
     public ArrayList<String>  generateQuestionsAsStrings() throws SQLException{
         ArrayList<String> questionsStrings=new ArrayList<>();
-
-
+        
+        System.out.println("came to part 1 in generateQuestionsAsStrings");
         //base case
         if(!this.questionsStrings.isEmpty()) return this.questionsStrings;
-
+        this.questionsStrings=new ArrayList<>();
+        System.out.println("came to part 2 in generateQuestionsAsStrings");
         
 
         for (Integer question_id : this.questions) {
@@ -251,8 +294,70 @@ public class Job {
         this.setJobStatus(status);
         PreparedStatement stmt=App.conn.prepareStatement("UPDATE jobs SET job_status=? WHERE job_id=?");
         stmt.setString(1, this.getJobStatus());
-        stmt.setInt(1,this.getId());
+        stmt.setInt(2,this.getId());
+        System.out.println(stmt.toString());
         int updateResults=stmt.executeUpdate();
+        System.err.println("job updated: "+updateResults);
+    }
+
+
+    
+    @Override
+    public String toString() {
+        if(App.logginUser.getUserType().equals(UserType.JOB_SEEKER))
+            return this.getJobTitle()+"\n"+
+            this.getCompany().getName()+"\n"+
+            this.getLocation()+
+            (this.getPay()!=null?this.getPay().toString():"")+"\n"+
+            "Profile: "+this.getCandidateProfile().substring(0, getCandidateProfile().length()>10?10:getCandidateProfile().length())+
+            ".........."+"\n";
+    return "\n"+this.getJobTitle()+"                 "+this.getActive()+" Active\t"+this.getReviewed()+" Reviewed\t"+this.getHired()+" of "+this.getOpenings()+" hired\n"+
+        "\t"+this.getLocation()+"                 "+
+        "Created at "+App.dateFormatter.format(this.getPostedAt());
+    }
+
+    
+    
+    public String show_details(){
+        StringBuilder s=new StringBuilder();
+
+        if(App.logginUser.getUserType().equals(UserType.JOB_PROVIDER)){
+            s.append(""
+            +"  Awaiting : "+this.getActive()
+            +"  Reviewed: "+this.getReviewed()
+            +"  Hired: "+this.getHired()
+            +"  Rejected: "+this.getRejected());
+            s.append("\n\n");
+        }
+
+        s.append(""
+        +"  Job Title: "+this.getJobTitle()+"\n"
+        +"  Company: "+this.getCompany().getName()+"\n"
+        +"  Location: "+this.getLocation()+"\n"
+        +"  Job Time: "+this.getFullOrPartTime()+"\n"
+        +"  Job Openings: "+this.getOpenings()+"\n"
+        +"  Education Level: "+this.getEducationLevel()+"\n"
+        +"  Posted on : "+App.dateFormatter.format(this.getPostedAt())+"\n"
+        +"  "+this.getPay().toString()+"\n"
+        +"-----------------------Description-----------------------\n\t"
+        +this.getJobDescription()+"\n"
+        +"----------------------Candidate Profile----------------------\n\t"
+        +this.getCandidateProfile()+"\n"
+        +"---------------------- Job Types----------------------\n\t"
+        +this.getJobTypes().toString()+"\n"
+        +"---------------------- Job Schedules----------------------\n\t"
+        +this.getJobSchedules().toString());
+
+        return s.toString();
+
+    }
+
+    public ArrayList<Integer> getQuestions() {
+        return questions;
+    }
+
+    public ArrayList<String> getQuestionsStrings() {
+        return questionsStrings;
     }
 
     public Integer getId() {
@@ -391,6 +496,10 @@ public class Job {
         this.jobTypes = jobTypes;
     }
 
+    public void addJobTypes(String jobType) {
+        this.jobTypes.add(jobType);
+    }
+
     public ArrayList<String> getJobSchedules() {
         return this.jobSchedules;
     }
@@ -399,6 +508,9 @@ public class Job {
         this.jobSchedules = jobSchedules;
     }
 
+    public void addJobSchedules(String jobSchedule) {
+        this.jobSchedules.add(jobSchedule);
+    }
 
     public void setQuestions(ArrayList<Integer> questions) {
         this.questions = questions;
@@ -417,8 +529,16 @@ public class Job {
         this.questionsStrings = questionsStrings;
     }
 
+    public void addQuestionsString(String questionsString) {
+        this.questionsStrings.add(questionsString);
+    }
+
     public ArrayList<Integer> getJobTypesIds() {
         return this.jobTypesIds;
+    }
+
+    public void addJobTypeId(int id){
+        this.jobTypesIds.add(id);
     }
 
     public void setJobTypesIds(ArrayList<Integer> jobTypesIds) {
@@ -428,6 +548,11 @@ public class Job {
     public ArrayList<Integer> getJobSchedulesIds() {
         return this.jobSchedulesIds;
     }
+
+    public void addJobScheduleId(int id){
+        this.jobSchedulesIds.add(id);
+    }
+
 
     public void setJobSchedulesIds(ArrayList<Integer> jobSchedulesIds) {
         this.jobSchedulesIds = jobSchedulesIds;

@@ -1,0 +1,9 @@
+user_id,first_name,last_name,email,password,location,gender,DOB,createdAt,user_type_id,phone
+2,chan,chan,chan,26c322652770620e64ac90682eb6504c,kumpandapalayam,male,2001-01-28,"2022-01-31 21:19:49",2,+919003815965
+3,siva,siva,siva,1955b38f13116a57e4de2134a139d139,Erode,male,2001-01-28,"2022-01-31 23:37:38",1,+919344015965
+4,dhanush,kannan,dhanush,4a17a7617eefaa232c6aa8a0092fe81,NULL,NULL,NULL,"2022-02-01 12:24:20",1,NULL
+5,rahul,rahul,rahul,439ed537979d8e831561964dbbbd7413,NULL,NULL,NULL,"2022-02-01 12:25:01",1,NULL
+6,prasanth,prasanth,prasanth,b66e6a6d01da60d77ecaf1a6a10e28b0,NULL,NULL,NULL,"2022-02-01 12:25:37",1,NULL
+7,pranav,ranjith,pranav,9e1135ff4157f14358c7c94c79aad47d,NULL,NULL,NULL,"2022-02-01 12:26:01",1,NULL
+8,test,test,test,98f6bcd4621d373cade4e832627b4f6,NULL,NULL,NULL,"2022-02-02 15:07:12",1,NULL
+9,test1,test1,test1,5a105e8b9d40e1329780d62ea2265d8a,chennai,male,0229-01-29,"2022-02-02 15:08:49",1,+919344015965

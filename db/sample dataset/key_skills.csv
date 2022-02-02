@@ -1,0 +1,1001 @@
+key_skill_id,name
+1,.NET
+2,".NET CLR"
+3,".NET Compact Framework"
+4,".NET Framework"
+5,".NET Remoting"
+6,".Net Core"
+7,.com
+8,.htaccess
+9,"1-4 Units"
+10,1-Wire
+11,"1-to-1 Marketing"
+12,"100% Financing"
+13,100-105
+14,100D
+15,"1031 Exchanges"
+16,"1099 Preparation"
+17,"10G Ethernet"
+18,10K
+19,10Q
+20,"10b5-1 Plans"
+21,10gR2
+22,10gen
+23,1120S
+24,11781
+25,11gR1
+26,11gR2
+27,"123D Catch"
+28,"123D Design"
+29,12c
+30,"12c Release 2"
+31,144A
+32,16PF
+33,1709
+34,"18th Century"
+35,"1940 Act"
+36,"19th Century"
+37,"1H NMR"
+38,1Password
+39,1SYNC
+40,1ShoppingCart
+41,2-D
+42,"2-D Design"
+43,"20-20 CAP Studio"
+44,"20/20 Design"
+45,"20/20 Design Software"
+46,"20/20 Technologies"
+47,200-101
+48,"2008 R2"
+49,"2012 R2"
+50,"2013 (Lync)"
+51,2014a
+52,2015a
+53,"2016 R2"
+54,2017a
+55,203K
+56,"20th Century"
+57,"21 CFR"
+58,"21st Century Skills"
+59,220-801
+60,220-802
+61,220-901
+62,220-902
+63,"24 Hour Emergency Service"
+64,24x7
+65,"24x7 Production Support"
+66,27.x
+67,"2D Animation"
+68,"2D CAD Drawing"
+69,"2D Drawing"
+70,"2D Software"
+71,"2D art"
+72,"2D graphics"
+73,"2D to 3D Conversion"
+74,2Do
+75,2G
+76,2V0
+77,"2nd Line"
+78,2v0-641
+79,2ε
+80,340B
+81,35mm
+82,360
+83,"360 Assessments"
+84,"360 Campaigns"
+85,"360 Degree Assessment"
+86,"360 Feedback"
+87,"360 Recruitment"
+88,360s
+89,365
+90,37signals
+91,3CX
+92,"3Com NBX"
+93,"3Com Switches"
+94,"3D + Animation"
+95,"3D Animation"
+96,"3D Architectural Rendering"
+97,"3D Coat"
+98,"3D Design"
+99,"3D Drawing"
+100,"3D GIS"
+101,"3D Graphic Design"
+102,"3D Graphics"
+103,"3D Home Architect"
+104,"3D Mapping"
+105,"3D Materials"
+106,"3D Math"
+107,"3D Modeling"
+108,"3D Modeling Software"
+109,"3D Packaging"
+110,"3D Particles and Dynamics"
+111,"3D Printing"
+112,"3D Production"
+113,"3D Prototyping"
+114,"3D Reconstruction"
+115,"3D Rendering"
+116,"3D Scanning"
+117,"3D Secure"
+118,"3D Seismic Interpretation"
+119,"3D Simulation"
+120,"3D Studio Max"
+121,"3D Studio Viz"
+122,"3D Textures"
+123,"3D Tracking"
+124,"3D Typography"
+125,"3D Visualization"
+126,"3D and Animation"
+127,"3D displays"
+128,"3D, Animation & CAO"
+129,"3D, Animation und CAD"
+130,"3D, animación y CAD"
+131,3D-Beleuchtung
+132,3D-Druck
+133,3D-Grafik
+134,3D-Materialien
+135,3D-Modellierung
+136,"3D-Partikel und Dynamik"
+137,3D-Texturen
+138,3DCom
+139,3DES
+140,3DEqualizer
+141,3DTV
+142,"3DVIA Composer"
+143,3Delight
+144,3G
+145,3GPP
+146,3GPP2
+147,3P
+148,3PAR
+149,3d
+150,"3ds Max"
+151,"3rd Line Support"
+152,"3rd Party Integrations"
+153,"3rd Party Liaison"
+154,"3rd Party Partnerships"
+155,"3rd Party Relationships"
+156,"3rd Party Software Integration"
+157,"4 Disciplines of Execution"
+158,"401(k) Retirement Savings Plans"
+159,"401k Rollovers"
+160,"403 b"
+161,"404 Compliance"
+162,409A
+163,40G
+164,"457 Plans"
+165,480interactive
+166,49CFR
+167,4G
+168,4GL
+169,4K
+170,4PL
+171,"4th Dimension"
+172,4x4
+173,"5 Why"
+174,"5.1 Mixing"
+175,501c3
+176,"504 Plans"
+177,"529 Plans"
+178,"55+ Communities"
+179,5500s
+180,5D
+181,5ESS
+182,5S
+183,5Y
+184,60D
+185,"63 Licenses"
+186,"6502 Assembly"
+187,650D
+188,68HC11
+189,68K
+190,"68k Assembly"
+191,6D
+192,6S
+193,"7 QC Tools"
+194,700D
+195,701
+196,"7D Mark II"
+197,"8 Wastes"
+198,8-D
+199,802.11a
+200,802.11b
+201,802.11g
+202,802.11i
+203,802.11n
+204,802.15.4
+205,802.16e
+206,802.1ag
+207,802.1d
+208,802.1q
+209,802.1x
+210,"8051 Assembly"
+211,"8051 Microcontroller"
+212,80x86
+213,837I
+214,837P
+215,89C51
+216,"8D Problem Solving"
+217,"960 Grid System"
+218,@Task
+219,"Eclairage 3D"
+220,"Eclairage et rendu"
+221,"Eclairage photo"
+222,"Equipement photo"
+223,"Equipement video"
+224,"A + Certified"
+225,A&D
+226,A&E
+227,A&H
+228,A&P
+229,"A&R Administration"
+230,A&U
+231,A+
+232,A++
+233,A-133
+234,A-GPS
+235,A-frames
+236,"A/B Testing"
+237,"A/R Collections"
+238,"A/R Management"
+239,"A/R analysis"
+240,"A1 Assessor"
+241,A10
+242,A2
+243,A2A
+244,A3
+245,"A3 Thinking"
+246,A320
+247,A330
+248,AAAHC
+249,AACR2
+250,AAMS
+251,AAP
+252,AAR
+253,AASHTO
+254,"AAUS Scientific Diver"
+255,"ABAP Web Dynpro"
+256,ABAP-OO
+257,"ABB 800xA"
+258,ABBYY
+259,"ABBYY FineReader"
+260,"ABC Analysis"
+261,"ABC Flowcharter"
+262,ABCP
+263,ABEL
+264,ABI
+265,ABLS
+266,"ABO Certified"
+267,ABSYNTH
+268,ABV
+269,"AC Drives"
+270,"AC Nielsen"
+271,AC/DC
+272,ACAD
+273,ACARS
+274,ACATS
+275,ACBS
+276,ACD
+277,"ACD Management"
+278,ACDSee
+279,ACE
+280,"ACE Certified"
+281,"ACE Certified Personal Trainer"
+282,ACF2
+283,ACFE
+284,ACH
+285,"ACI Codes"
+286,ACIS
+287,"ACLS Instruction"
+288,ACMS
+289,ACOA
+290,ACORD
+291,ACP
+292,ACPI
+293,ACR
+294,ACSA
+295,ACSC
+296,ACSLS
+297,ACSM
+298,"ACSM Health Fitness"
+299,ACSP
+300,ACSR
+301,ACSS
+302,"ACT CRM"
+303,"ACT prep"
+304,ACT!
+305,"AD Migration"
+306,"ADA Compliance"
+307,"ADA guidelines"
+308,ADABAS
+309,ADB
+310,"ADB Adapter"
+311,ADCs
+312,ADDIE
+313,ADDM
+314,ADE
+315,ADEA
+316,ADFS
+317,"ADFS 2.0"
+318,"ADHD Coaching"
+319,ADI
+320,ADIC
+321,ADINA
+322,ADK
+323,ADL
+324,ADM
+325,ADME
+326,ADMET
+327,ADMS
+328,ADO.NET
+329,ADODB
+330,"ADP E-Time"
+331,"ADP HRB"
+332,"ADP Payforce"
+333,"ADP Payroll"
+334,"ADP ReportSmith"
+335,"ADP ezLaborManager"
+336,"ADR Recording"
+337,ADRs
+338,ADS-B
+339,ADSI
+340,ADSO
+341,ADT
+342,ADUC
+343,ADX
+344,AE
+345,AEA
+346,AEC
+347,AERMOD
+348,AES
+349,AFAA
+350,"AFAA Certified Personal Trainer"
+351,AFDX
+352,AFE
+353,AFIS
+354,AFLP
+355,AFM
+356,AFS
+357,"AFT Fathom"
+358,AFTRA
+359,"AGI 32"
+360,AHA
+361,AHDL
+362,AHLTA
+363,AHP
+364,AHU
+365,AHWD
+366,AIA
+367,"AIA Billing"
+368,"AIA Documents"
+369,AIAG
+370,AIC
+371,AICC
+372,AICP
+373,AIDC
+374,AIESEC
+375,AIF
+376,AIML
+377,AIMSUN
+378,AIMSweb
+379,AIN
+380,AIR
+381,"AIR for Android Extension"
+382,AISC
+383,"AIX 5.x"
+384,"AIX Administration"
+385,AJAX
+386,"AJAX Frameworks"
+387,"AJAX Toolkit"
+388,AKTA
+389,ALARP
+390,ALC
+391,ALCO
+392,ALE
+393,ALF
+394,ALLL
+395,ALM
+396,ALM/TFS
+397,ALP
+398,ALSA
+399,ALTA
+400,"ALTA Surveys"
+401,ALV
+402,"ALV Reporting"
+403,"ALV Reports"
+404,"AMA style"
+405,AMAG
+406,AMB
+407,AMBA
+408,"AMBA AHB"
+409,AMC
+410,AMCs
+411,AMD64
+412,AMEL
+413,AMESim
+414,AMFI
+415,"AMFI Certified"
+416,AMFPHP
+417,AMHS
+418,AMI
+419,AML
+420,AMLS
+421,AMOS
+422,AMPL
+423,AMPS
+424,AMQP
+425,AMR
+426,AMRT
+427,AMS360
+428,"AMSI Property Management"
+429,AMX
+430,"AMX Programmer"
+431,ANCC
+432,ANCOVA
+433,ANOVA
+434,ANPR
+435,ANSI
+436,"ANSI C"
+437,"ANSI SQL"
+438,"ANSI X12"
+439,"ANSI Y14.5"
+440,ANSYS
+441,ANTLR
+442,"ANTS Profiler"
+443,ANVISA
+444,AOC
+445,AOD
+446,AODA
+447,AOG
+448,AOI
+449,"AP Biology"
+450,"AP Calculus"
+451,"AP Stylebook"
+452,"AP writing"
+453,APA
+454,APAC
+455,APACS
+456,APB
+457,APC
+458,"APC UPS"
+459,APDL
+460,API
+461,"API (DEPRECATED)"
+462,"API 510"
+463,"API 570"
+464,"API 653"
+465,"API 6A"
+466,"API Development"
+467,"API Platform"
+468,"API Testing"
+469,"API manufacturing"
+470,APICS
+471,"APICS Member"
+472,APL
+473,APLUS
+474,"APO SNP"
+475,APS
+476,APT
+477,APV
+478,APX
+479,APhA
+480,AQL
+481,AQTESOLV
+482,"AQTF compliance"
+483,"AR System"
+484,ARC
+485,ARCADY
+486,ARCHICAD
+487,ARCS
+488,ARES
+489,ARFF
+490,ARIA
+491,ARIMA
+492,"ARINC 429"
+493,"ARINC 653"
+494,ARIS
+495,ARISg
+496,"ARM Architecture"
+497,"ARM Assembly"
+498,"ARM Cortex-M"
+499,ARMA
+500,ARP
+501,ARPA
+502,ARRA
+503,ARTstor
+504,AS2805
+505,"AS400 Administration"
+506,AS9100
+507,"AS9100 Lead Auditor"
+508,AS9102
+509,AS9120
+510,ASAP
+511,ASCE
+512,"ASCE 7"
+513,ASCII
+514,ASCP
+515,ASDM
+516,"ASE Certified"
+517,ASEAN
+518,ASHRAE
+519,ASI
+520,ASID
+521,ASIS
+522,"ASK MANMAN"
+523,"ASME Standards"
+524,"ASME Y14.5"
+525,ASN.1
+526,ASNT
+527,ASON
+528,"ASP Baton"
+529,ASP.NET
+530,"ASP.NET AJAX"
+531,"ASP.NET Core"
+532,"ASP.NET Core MVC"
+533,"ASP.NET MVC"
+534,"ASP.NET Web API"
+535,ASPX
+536,ASQ
+537,"ASQ Member"
+538,"ASQ Senior Member"
+539,ASRS
+540,ASSP
+541,ASTM
+542,"ASTM standards"
+543,ASW
+544,"AT commands"
+545,"AT&T Business Direct"
+546,"AT&T Connect"
+547,ATA
+548,ATCA
+549,ATDD
+550,ATEX
+551,ATG
+552,"ATG CSC"
+553,"ATG Commerce"
+554,"ATG Dynamo"
+555,"ATG Portal"
+556,"ATG Search"
+557,"ATI Vision"
+558,"ATL COM"
+559,"ATM Networks"
+560,ATMega
+561,ATMs
+562,ATO
+563,ATP
+564,ATR
+565,ATR-FTIR
+566,ATRP
+567,ATSC
+568,"ATV Insurance"
+569,AU
+570,AUP
+571,AUTOSAR
+572,AUV
+573,"AV Installation"
+574,"AV Integration"
+575,"AV Systems"
+576,AVC
+577,AVCHD
+578,"AVEVA PDMS"
+579,AVG
+580,AVL
+581,"AVL Boost"
+582,AVO
+583,"AVR Studio 4"
+584,AVS
+585,"AVS Scripting"
+586,AVST
+587,AWIPS
+588,AWR
+589,"AWR Microwave Office"
+590,AWS
+591,"AWS (DO NOT USE TAG Amazon Web Services)"
+592,"AWS CWI"
+593,AWStats
+594,AWT
+595,AWWA
+596,"AX 2009"
+597,AXE
+598,AXI
+599,Aaton
+600,"Ab Initio"
+601,Abacus
+602,AbacusLaw
+603,Abandonment
+604,Abaqus
+605,Abatement
+606,"Abbreviated New Drug Application (ANDA)"
+607,Abdominal
+608,"Abdominal Imaging"
+609,Abelton
+610,Abend-Aid
+611,Abis
+612,AbleCommerce
+613,Ableton
+614,"Ableton Live"
+615,"Ableton Push"
+616,"Abnormal Psychology"
+617,"Aboriginal Affairs"
+618,"Aboriginal Health"
+619,"Aboriginal Law"
+620,"Aboriginal Relations"
+621,"Above the Line"
+622,Abra
+623,"Abra Suite"
+624,Abrasives
+625,Absenteeism
+626,"Absolute Return"
+627,Absorption
+628,"Absorption Spectroscopy"
+629,"Abstract Algebra"
+630,"Abstract Expressionism"
+631,"Abstract Paintings"
+632,Abstracting
+633,Abstraction
+634,Abstracts
+635,Abundance
+636,"Abuse Prevention"
+637,"Academic Achievement"
+638,"Academic Administration"
+639,"Academic Advising"
+640,"Academic Background"
+641,"Academic Consulting"
+642,"Academic Databases"
+643,"Academic Development"
+644,"Academic Editing"
+645,"Academic English"
+646,"Academic Journals"
+647,"Academic Libraries"
+648,"Academic Medical Centers"
+649,"Academic Medicine"
+650,"Academic Program Development"
+651,"Academic Program Management"
+652,"Academic Publishing"
+653,"Academic Research"
+654,"Academic Search Premier"
+655,"Academic Support Services"
+656,"Academic Writing"
+657,Academies
+658,"Accelerated Growth"
+659,"Accelerated Life Testing"
+660,"Accelerated Reader"
+661,"Accelerated Testing"
+662,Acceleration
+663,Accelerator
+664,"Accelerator Physics"
+665,Accelerometer
+666,"Accent Neutralization"
+667,"Accent Reduction"
+668,"Acceptance & Commitment Therapy"
+669,"Acceptance Sampling"
+670,"Acceptance Testing"
+671,"Accepting Responsibility"
+672,Access
+673,"Access Control"
+674,"Access Control Management"
+675,"Access Dimensions"
+676,"Access Gateway"
+677,"Access Lists"
+678,"Access Networks"
+679,"Access Points"
+680,"Access Technologies"
+681,"Access to Care"
+682,"Access to Finance"
+683,"Access to Information"
+684,"Access to Justice"
+685,AccessData
+686,"AccessData Certified Examiner"
+687,Accessibility
+688,"Accessible à tous"
+689,Accessioning
+690,Accessories
+691,Accessorizing
+692,Accident
+693,"Accident Benefits"
+694,"Accident Claims"
+695,"Accident Insurance"
+696,"Accident Investigation"
+697,"Accident Management"
+698,"Accident Reconstruction"
+699,Acclivus
+700,Accompaniment
+701,Accordion
+702,"Account Administration"
+703,"Account Coordination"
+704,"Account Creation"
+705,"Account Developement"
+706,"Account Direction"
+707,"Account Directors"
+708,"Account Executives"
+709,"Account Expansion"
+710,"Account Handlers"
+711,"Account Maintenance"
+712,"Account Mapping"
+713,"Account Marketing"
+714,"Account Optimization"
+715,"Account Origination"
+716,"Account Planning"
+717,"Account Portfolio Management"
+718,"Account Reconciliation"
+719,"Account Relations"
+720,"Account Relationship"
+721,"Account Representation"
+722,"Account Resolution"
+723,"Account Revitalization"
+724,"Account Sales Strategies"
+725,"Account Segmentation"
+726,"Account Servicing"
+727,AccountEdge
+728,AccountMate
+729,AccountRight
+730,"AccountRight Live"
+731,Accountability
+732,"Accountable Care"
+733,Accountants
+734,"Accounting Consulting"
+735,"Accounting Issues"
+736,"Accounting Management"
+737,"Accounting Recruitment"
+738,"Accounting Research"
+739,"Accounting Software"
+740,"Accounting Standards"
+741,"Accounting Standards for Private Enterprises (ASPE)"
+742,"Accounting System"
+743,"Accounting for Small Businesses"
+744,"Accounts Finalization"
+745,"Accounts Payable"
+746,"Accounts Payable & Receivable"
+747,"Accounts Production"
+748,"Accounts Receivable"
+749,Accreditation
+750,"Accredited Buyer"
+751,"Accredited Buyer Rep"
+752,"Accredited Cruise Counselor"
+753,"Accredited Staging Professional"
+754,"Accredited Training"
+755,Accretion/dilution
+756,Accruals
+757,AccuMap
+758,AccuRev
+759,Accubid
+760,Accumulo
+761,Accurender
+762,Accurint
+763,Accutrac
+764,"Acer Hardware"
+765,Acess
+766,"Achieve Global"
+767,"Achieve Global Certified"
+768,"Acid Mine Drainage"
+769,"Acid Pro"
+770,Acidizing
+771,Acknowledgements
+772,Acne
+773,"Acne Treatment"
+774,Acomba
+775,Aconex
+776,Acoustic
+777,"Acoustic Emission"
+778,"Acoustic Guitar"
+779,"Acoustic Measurement"
+780,"Acoustic Modeling"
+781,Acoustical
+782,"Acoustical Ceilings"
+783,Acoustics
+784,Acquia
+785,"Acquired Brain Injury"
+786,"Acquisition Assessment"
+787,"Acquisition Campaigns"
+788,"Acquisition Integration"
+789,"Acquisition Marketing"
+790,"Acquisition Professional"
+791,"Acquisition Programs"
+792,"Acquisition Sales"
+793,"Acquisition Targeting"
+794,Acquisitions
+795,Acreage
+796,Acrobat
+797,Acrobatics
+798,Acronis
+799,"Acronis True Image"
+800,Acrylic
+801,"Acrylic Painting"
+802,Act-3D
+803,Actel
+804,Actimize
+805,Acting
+806,"Acting Coach"
+807,"Acting Training"
+808,Actinic
+809,"Action Learning"
+810,"Action Oriented"
+811,"Action Plan Creation"
+812,"Action Plan Development"
+813,"Action Research"
+814,"Action Sports"
+815,ActionScript
+816,ActivInspire
+817,"Activated Carbon"
+818,"Activated Sludge"
+819,"Activation Support"
+820,Activations
+821,"Active Adult Communities"
+822,"Active Directory"
+823,"Active Directory Experience"
+824,"Active DoD Secret Clearance"
+825,"Active Learning"
+826,"Active Lifestyle"
+827,"Active Pharmaceutical Ingredients"
+828,"Active Rehabilitation"
+829,"Active Release"
+830,"Active Reports"
+831,"Active Search"
+832,"Active Server Pages (ASP)"
+833,"Active Shooter Response"
+834,"Active TS/SCI Clearance"
+835,"Active Template Library (ATL)"
+836,"Active Transportation"
+837,Active-HDL
+838,ActiveBatch
+839,ActiveCollab
+840,ActiveMQ
+841,ActiveRecord
+842,ActiveSync
+843,ActiveX
+844,"ActiveX Data Objects (ADO)"
+845,Activism
+846,Activiti
+847,"Activities of Daily Living"
+848,"Activity Based Costing"
+849,"Activity Based Management"
+850,"Activity Checks"
+851,"Activity Coordination"
+852,"Activity Diagrams"
+853,"Activity Planning"
+854,Actix
+855,"Actuarial Consulting"
+856,"Actuarial Exams"
+857,"Actuarial Science"
+858,Actuaries
+859,"Actuate Report"
+860,"Actuate Reporting"
+861,Actuators
+862,Acunetix
+863,Acupressure
+864,Acupuncture
+865,Acura
+866,Acute
+867,"Acute Care"
+868,"Acute Coronary Syndrome"
+869,"Acute Pain Management"
+870,"Acute Rehabilitation"
+871,Acutonics
+872,Acxiom
+873,"Ad Development"
+874,"Ad Exchanges"
+875,"Ad Hoc Networks"
+876,"Ad Hoc Reporting"
+877,"Ad Networks"
+878,"Ad Optimization"
+879,"Ad Serving"
+880,"Ad Targeting"
+881,"Ad Tech"
+882,"Ad Tracking"
+883,Ad-hoc
+884,"Ada programming"
+885,Adaco
+886,Adage
+887,Adagio
+888,Adaptation
+889,Adapter
+890,"Adaptive Control"
+891,"Adaptive Equipment"
+892,"Adaptive Filtering"
+893,"Adaptive Leadership"
+894,"Adaptive Learning"
+895,"Adaptive Management"
+896,"Adaptive Optics"
+897,"Adaptive Reuse"
+898,"Adaptive Streaming"
+899,"Adaptive Systems"
+900,"Adaptive Technology"
+901,Add-ins
+902,Add-ons
+903,Addendums
+904,"Addiction Medicine"
+905,"Addiction Psychiatry"
+906,"Addiction Recovery"
+907,"Addictive Disorders"
+908,"Adding Machine"
+909,Addition
+910,"Additive Manufacturing"
+911,Additives
+912,"Address Verification"
+913,Ademco
+914,Adenovirus
+915,"Adept problem-solver"
+916,Aderant
+917,Adgooroo
+918,Adherence
+919,Adhesion
+920,"Adhesive Bonding"
+921,Adhesives
+922,Adjudication
+923,Adjustable
+924,Adjusters
+925,"Adjustment Disorders"
+926,"Adjustment Of Status"
+927,Adjustments
+928,Adjuvants
+929,Admarc
+930,AdminStudio
+931,"Administración CRM y ERP"
+932,"Administración de bases de datos"
+933,"Administración de dispositivos móviles"
+934,"Administración de redes"
+935,"Administración de sistemas operativos"
+936,"Administration CRM et ERP"
+937,"Administration Jobs"
+938,"Administration de bases de données"
+939,"Administration réseau"
+940,Administrative
+941,"Administrative Assistance"
+942,"Administrative Investigations"
+943,"Administrative Law"
+944,"Administrative Organization"
+945,"Administrative Processes"
+946,"Administrative Skills"
+947,"Administrative Staffing"
+948,"Administrative Tools"
+949,"Admissions Counseling"
+950,"Admitted to Practice"
+951,Adobe
+952,"Adobe AIR"
+953,"Adobe Acrobat"
+954,"Adobe Analytics"
+955,"Adobe Animate"
+956,"Adobe Audition"
+957,"Adobe Bridge"
+958,"Adobe Camera Raw"
+959,"Adobe Certified"
+960,"Adobe Color"
+961,"Adobe Comp"
+962,"Adobe Connect"
+963,"Adobe Contribute"
+964,"Adobe Creative Cloud"
+965,"Adobe Creative Suite"
+966,"Adobe Design Programs"
+967,"Adobe Director"
+968,"Adobe Document Cloud"
+969,"Adobe Edge"
+970,"Adobe Encore"
+971,"Adobe Experience"
+972,"Adobe Experience Design"
+973,"Adobe Experience Designer"
+974,"Adobe Experience Manager"
+975,"Adobe Fireworks"
+976,"Adobe Freehand"
+977,"Adobe Fuse"
+978,"Adobe Ideas"
+979,"Adobe Illustrator"
+980,"Adobe LiveCycle"
+981,"Adobe LiveCycle Designer"
+982,"Adobe Marketing Cloud"
+983,"Adobe Media Encoder"
+984,"Adobe Mobile Apps"
+985,"Adobe Muse"
+986,"Adobe Photodeluxe"
+987,"Adobe Photoshop"
+988,"Adobe Portfolio"
+989,"Adobe Prelude"
+990,"Adobe Premiere Pro"
+991,"Adobe Presenter"
+992,"Adobe Professional"
+993,"Adobe Social"
+994,"Adobe Spark"
+995,"Adobe Speedgrade"
+996,"Adobe Standard"
+997,"Adobe Story"
+998,"Adobe Streamline"
+999,"Adobe Technical Communication Suite"
+1000,"Adobe eLearning Suite"

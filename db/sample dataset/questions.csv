@@ -1,0 +1,15 @@
+question_id,question,job_id
+1,"what is your aim?",4
+2,"why we should hire you?",4
+3,"what is your experience?",3
+4,"tell me about yourself?",3
+5,"Describe about your acheievements?",5
+6,"tell me about yourself?",5
+7,"what are the skills you proficient with?",6
+8,"what are the skills you proficient with?",6
+9,"what are the skills you proficient with?",7
+10,"do you have leetcode profile? if yes drop the profile link",8
+11,"what are the prpjects you have done?",9
+12,"what are the domains you proficient with?",10
+13,"what are the company you interviewed previoulsy ?",11
+14,"what are the difficulty you face with your competitive programming?",12

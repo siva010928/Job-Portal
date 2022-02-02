@@ -28,15 +28,13 @@ public class Project {
         }else this.end=end;
     }
 
-    public void updateProject(Project project) throws SQLException{
-        this.setTitle(project.getTitle());
-        this.setClient(project.getClient());
-        this.setStatus(project.getStatus());
-        this.setLink(project.getLink());
-        this.setDetail(project.getDetail());
-        this.setStart(project.getStart());
+    public Project() {
+    }
 
-        PreparedStatement stmt=App.conn.prepareStatement("UPDATE projects SET start=?,end=?,title=?,client=?status=?,link=?,details=? WHERE project_id=?");
+    public void updateProject() throws SQLException{
+
+        
+        PreparedStatement stmt=App.conn.prepareStatement("UPDATE projects SET start_date=?,end_date=?,title=?,client=?,status=?,link=?,details=? WHERE project_id=?");
         stmt.setDate(1, this.getStart());
         //if job seeker does not fill end date in this project in edit education then set null in databse
         if(this.getEnd().equals(App.nullDate)){
@@ -51,7 +49,9 @@ public class Project {
         stmt.setString(5, this.getStatus());
         stmt.setString(6, this.getLink());
         stmt.setString(7, this.getDetail());
+        stmt.setInt(8, this.getId());
 
+        System.err.println(stmt.toString());
         int updatedResults=stmt.executeUpdate();
     }
 
@@ -118,5 +118,13 @@ public class Project {
     public void setId(int id) {
         this.id=id;
     }
+
+    @Override
+    public String toString() {
+        return "Project [client=" + client + ", detail=" + detail + ", end=" + end + ", isCurrentProject="
+                + isCurrentProject + ", link=" + link + ", start=" + start + ", status=" + status + ", title=" + title
+                + "]";
+    }
+    
 }
 

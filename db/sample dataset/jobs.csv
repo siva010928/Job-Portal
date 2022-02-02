@@ -1,0 +1,12 @@
+job_id,title,description,location_type,location,fullOrPartTime,openings,job_status,education_level,candidate_profile,postedAt,job_provider_id,company_id,pay_id
+3,"Software Developer",asd,asd,chennai,part,4,CLOSE,sda,ads,"2022-01-31 23:10:46",1,1,6
+4,"App developer",abc,das,Bangalore,Part,9,OPEN,b,fd,"2022-01-31 23:14:13",1,1,7
+5,"Web developer",sdad,asd,Karnataka,part,3,OPEN,ads,asd,"2022-02-01 11:56:35",1,1,8
+6,"Kernal Developer",asd,dsa,chennai,part,10,OPEN,asd,adaAD,"2022-02-01 12:06:51",1,1,9
+7,"React Developer",asd,dsa,chennai,part,10,OPEN,asd,adaAD,"2022-02-01 12:13:56",1,1,10
+8,"Nodejs Developer",asd,dsa,Bangalore,Full,10,OPEN,asd,adaAD,"2022-02-01 12:13:56",1,1,11
+9,"Database Developer",asd,dsa,Karnataka,Full,10,OPEN,asd,adaAD,"2022-02-01 12:13:56",1,1,12
+10,"Kernal Developer",asd,dsa,Karnataka,Full,10,OPEN,asd,adaAD,"2022-02-01 12:13:56",1,1,13
+11,"App Developer",asd,dsa,Bangalore,Full,10,OPEN,asd,adaAD,"2022-02-01 12:13:56",1,1,14
+12,"Software Developer",asd,dsa,chennai,Full,10,OPEN,asd,adaAD,"2022-02-01 12:13:56",1,1,15
+13,"associate software developer",sda,sd,chennai,part,3,OPEN,das,ads,"2022-02-01 13:04:59",1,1,16

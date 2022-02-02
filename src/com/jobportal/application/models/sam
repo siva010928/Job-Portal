@@ -1,9 +1,48 @@
-job_schedule_id|name||
-1|"Morning shift"||
-2|"Day shift"||
-3|"Evening shift"||
-4|"Night shift"||
-5|"Flexible shift"||
-6|"Rotational shift"||
-7|"Fixed shift"||
-8|"US shift||
+public static void skill_list_view() throws NoSuchAlgorithmException, IOException, SQLException, ParseException{
+    JobSeeker jobSeeker=((JobSeeker)logginUser);
+    System.out.println("Skills:\t"+jobSeeker.getSkills()+"\n\n");
+    System.out.println("1:  Add/Delete Skill");
+    System.out.println("Press any key to go back!");
+
+    switch (reader.readLine()) {
+        case "1":
+            System.out.println("-------------------------------Search skills to Add/Delete------------------------------");
+            System.out.print("Enter keyword to search: ");
+            ArrayList<ArrayList<String>> searchedSkills=jobSeeker.searchSkills(reader.readLine());
+            
+            int skill_input=-1;
+            do{
+                System.out.println("Press 0 to skip....");
+                for(int i=0;i<searchedSkills.size();i++){
+                    System.out.println(i+1+": "+searchedSkills.get(i).get(1));
+                }
+                skill_input=Integer.parseInt(reader.readLine());
+                if(skill_input>0 && skill_input<=searchedSkills.size()){
+                    System.out.println("1:  Add this Skill");
+                    if(jobSeeker.getSkills().contains(searchedSkills.get(skill_input-1).get(1)))
+                        System.out.println("2:  Remove this Skill");
+                    System.err.println("Press Any Key to Skip...");
+                    switch (reader.readLine()) {
+                        case "1":
+                            jobSeeker.addSkill(Integer.parseInt(searchedSkills.get(skill_input-1).get(0)));
+                            break;
+                        case "2":
+                            jobSeeker.removeSkill(Integer.parseInt(searchedSkills.get(skill_input-1).get(0)));
+                            break;
+                        default:
+                            skill_input=0;
+                            break;
+                    }
+                } 
+                else{
+                    System.err.println("wrong input");
+                    skill_input=1;
+                } 
+            }while(skill_input<=0);
+            skill_list_view();
+            break;
+        default:
+            seeker_additional_profile_view();
+            break;
+    }
+}
