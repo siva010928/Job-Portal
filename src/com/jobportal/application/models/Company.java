@@ -70,7 +70,7 @@ public class Company {
         stmt.setString(7, review.getCons());
         stmt.setInt(8, App.id);
         stmt.setInt(9, this.id);
-        System.err.println("\n"+stmt.toString()+"\n");
+        // System.err.println("\n"+stmt.toString()+"\n");
         int rowsInserted=stmt.executeUpdate();
         this.reviews++;
         System.err.println("Reviewed Successfully..");
@@ -123,7 +123,7 @@ public class Company {
         PreparedStatement stmt=App.conn.prepareStatement(query.toString());
         
         stmt.setInt(1,this.getId());//company_id
-        System.err.println("\n"+stmt.toString()+"\n");
+        // System.err.println("\n"+stmt.toString()+"\n");
         ArrayList<Review> reviews=new ArrayList<>();
         ResultSet rS=stmt.executeQuery();
         while(rS.next()){

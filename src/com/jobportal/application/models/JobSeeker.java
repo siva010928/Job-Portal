@@ -137,7 +137,7 @@ public class JobSeeker extends User{
         query.append(" LIMIT 10");
 
         PreparedStatement stmt=App.conn.prepareStatement(query.toString());
-        System.err.println(query.toString());
+        // System.err.println(query.toString());
         ArrayList<Company> companies=new ArrayList<>();
         ResultSet rS=stmt.executeQuery();
         while(rS.next()){
@@ -206,7 +206,7 @@ public class JobSeeker extends User{
         query.append("LIMIT 10");
 
         PreparedStatement stmt=App.conn.prepareStatement(query.toString());
-        System.err.println(query.toString());
+        // System.err.println(query.toString());
         ArrayList<Job> jobs=new ArrayList<>();
         ResultSet rS=stmt.executeQuery();
         while(rS.next()){
@@ -310,7 +310,7 @@ public class JobSeeker extends User{
 
         PreparedStatement stmt=App.conn.prepareStatement(query.toString());
         stmt.setInt(1, App.id);
-        System.err.println("\n"+stmt.toString()+"\n");
+        // System.err.println("\n"+stmt.toString()+"\n");
         ResultSet rS=stmt.executeQuery();
         ArrayList<Application> applications = new ArrayList<>();
         while(rS.next()){
@@ -427,7 +427,7 @@ public class JobSeeker extends User{
 
         PreparedStatement stmt=App.conn.prepareStatement("SELECT *  FROM languages WHERE name LIKE ? ORDER BY name");
         stmt.setString(1, "%"+search+"%");
-        System.err.println(stmt.toString());
+        // System.err.println(stmt.toString());
         ResultSet Rsearches=stmt.executeQuery();
         while(Rsearches.next()){
             searchedResults.add(new ArrayList<>(Arrays.asList(Rsearches.getInt("language_id")+"",Rsearches.getString("name"))));

@@ -1691,13 +1691,15 @@ public class App {
         }
     }
     public static void apply_job_view() throws SQLException, IOException, ParseException, NumberFormatException, NoSuchAlgorithmException{
-        ArrayList<String> questions=current_job.generateQuestions();
-        ArrayList<String> answers=new ArrayList<>();
-        for(int i=0;i<questions.size();i++){
-            System.out.println(questions.get(i));
-            answers.add(reader.readLine());
+        if(!current_job.checkApplicationExists()){
+            ArrayList<String> questions=current_job.generateQuestions();
+            ArrayList<String> answers=new ArrayList<>();
+            for(int i=0;i<questions.size();i++){
+                System.out.println(questions.get(i));
+                answers.add(reader.readLine());
+            }
+            current_job.applyJob(answers, "resume_"+logginUser.getFirstName()+"_"+App.id);
         }
-        current_job.applyJob(answers, "resume_"+logginUser.getFirstName()+"_"+App.id);
         my_jobs_view();
     }
     public static void public_company_view() throws IOException, SQLException, NumberFormatException, ParseException, NoSuchAlgorithmException{

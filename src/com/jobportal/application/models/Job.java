@@ -140,7 +140,7 @@ public class Job {
             query.deleteCharAt(query.length()-1);   
         }
         PreparedStatement stmt=App.conn.prepareStatement(query.toString());
-        System.err.println(query.toString());
+        // System.err.println(query.toString());
         stmt.setInt(1, job_id);
         ResultSet rApplications=stmt.executeQuery();
 
@@ -155,23 +155,22 @@ public class Job {
 
     }
 
+    public boolean checkApplicationExists() throws SQLException{
+        PreparedStatement stmt = App.conn.prepareStatement("SELECT * FROM applications WHERE job_seeker_id=? AND job_id=?");
+        stmt.setInt(1, App.id);
+        stmt.setInt(2, this.getId());
+        if(stmt.executeQuery().isBeforeFirst()){
+            System.out.println("Already Applied... check my applications");
+            return true;
+        } 
+        return false;
+    }
+
     public void applyJob(ArrayList<String> answers,String resume) {
         int job_id=this.id;
 
 
         PreparedStatement stmt;
-        try {
-            stmt = App.conn.prepareStatement("SELECT * FROM applications WHERE job_seeker_id=? AND job_id=?");
-            stmt.setInt(1, App.id);
-            stmt.setInt(2, job_id);
-            if(stmt.executeQuery().isBeforeFirst()){
-                System.out.println("Already Applied... check my applications");
-                return;
-            } 
-        } catch (SQLException e2) {
-            // TODO Auto-generated catch block
-            e2.printStackTrace();
-        }
 
         //here we want to use transaction principle 
         //once a use applied a job values are inserted into both applications db and answers db
