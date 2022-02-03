@@ -40,7 +40,8 @@ public class Pay {
     }
 
     public void updatePay() throws SQLException{
-        PreparedStatement stmt=App.conn.prepareStatement("UPDATE `job_portal`.`pays` SET `from` = ?, `to` =?, `pay_type` = ? WHERE (`pay_id` = ?)");
+        System.out.println("Pay.updatePay()");
+        PreparedStatement stmt=App.conn.prepareStatement("UPDATE "+DB_VARIABLES.DB+".`pays` SET `from` = ?, `to` =?, `pay_type` = ? WHERE (`pay_id` = ?)");
         stmt.setBigDecimal(1, this.getFrom());
         stmt.setBigDecimal(2, this.getTo());
         stmt.setString(3, this.getPayType());

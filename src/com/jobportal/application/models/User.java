@@ -2,7 +2,6 @@ package com.jobportal.application.models;
 
 import com.jobportal.application.*;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import java.io.IOException;
 import java.lang.System.Logger;

@@ -21,6 +21,7 @@ import java.util.Map;
 
 import com.jobportal.application.models.Application;
 import com.jobportal.application.models.Company;
+import com.jobportal.application.models.DB_VARIABLES;
 import com.jobportal.application.models.Education;
 import com.jobportal.application.models.Employment;
 import com.jobportal.application.models.Job;
@@ -104,8 +105,10 @@ public class App {
         initializeJobtypesAndschedules();
         // System.out.println("siva");
         try {
-            conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/job_portal","root","Deepika@71199");
-            System.out.println("database successfully connected......");
+            // conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/job_portal","root","Deepika@71199");
+
+            conn=DriverManager.getConnection("jdbc:mysql://"+DB_VARIABLES.HOST+":"+DB_VARIABLES.PORT+"/"+DB_VARIABLES.DB,DB_VARIABLES.USER,DB_VARIABLES.PASSWORD);
+            System.out.println("database successfully connected :  "+" [DB=" + DB_VARIABLES.DB + ", HOST=" + DB_VARIABLES.HOST + ", PORT=" + DB_VARIABLES.PORT + "]");
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -457,7 +457,7 @@ public class JobSeeker extends User{
     public ArrayList<ArrayList<String>> searchSkills(String search) throws SQLException{
         ArrayList<ArrayList<String>> searchedResults=new ArrayList<>();
 
-        PreparedStatement stmt=App.conn.prepareStatement("SELECT *  FROM key_skills WHERE name LIKE ? ORDER BY name");
+        PreparedStatement stmt=App.conn.prepareStatement("SELECT *  FROM key_skills WHERE name LIKE ? ORDER BY name LIMIT 25");
         stmt.setString(1, "%"+search+"%");
         ResultSet Rsearches=stmt.executeQuery();
         while(Rsearches.next()){

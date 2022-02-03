@@ -60,7 +60,7 @@ public class Company {
 
     // Adding review to the company
     public void addReview(Review review) throws SQLException {
-        PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO `job_portal`.`reviews` (`job_title`, `ratings`, `job_status`, `location`, `review`, `pros`, `cons`, `job_seeker_id`, `company_id`)  VALUES(?,?,?,?,?,?,?,?,?)");
+        PreparedStatement stmt=App.conn.prepareStatement("INSERT INTO "+DB_VARIABLES.DB+".`reviews` (`job_title`, `ratings`, `job_status`, `location`, `review`, `pros`, `cons`, `job_seeker_id`, `company_id`)  VALUES(?,?,?,?,?,?,?,?,?)");
         stmt.setString(1, review.getJobTitle());
         stmt.setInt(2, review.getRatings());
         stmt.setString(3, review.getJobStatus());
