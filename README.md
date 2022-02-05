@@ -1,6 +1,14 @@
 # Job Portal
 #### A desktop App,full implementation using oops and mysql and algorithms,that helps job seekers and job providers 
 
+## To run this project:
+   * Clone this Project in your local system.
+   * install java(jdk) from official website
+   * Open the terminal from the cloned project folder,then run the following command 
+```bash-script
+java -jar ./Job-Portal.jar
+```
+
 ## Technologies
 Project is created with:
 * Java SE 17.0. 2
@@ -9,7 +17,7 @@ Project is created with:
 * JavaFx 17
 
 ## Project Status
-#### In development,takes few days to finish.
+#### Fronted in  development, Backend tested and deployed.
 
 ## class diagram
 ![star uml](https://github.com/siva010928/Job-Portal/blob/main/class_diagram.jpg)
@@ -32,21 +40,3 @@ Project is created with:
 ## REFERENCE
 #### [Indeed](https://in.indeed.com/?from=gnav-homepage)    [Naukri](https://www.naukri.com/mnjuser/homepage)
 
-## Getting Started
-
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
-
-## Folder Structure
-
-The workspace contains two folders by default, where:
-
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
